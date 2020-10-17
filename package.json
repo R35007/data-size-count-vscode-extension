@@ -3,11 +3,26 @@
 	"displayName": "Data Size Count",
 	"description": "Shows the selected JSON object or array size, lines count, words count",
 	"version": "0.0.1",
+	"icon": "images/thinker.png",
 	"publisher": "Thinker",
 	"author": {
 		"name": "Sivaraman",
 		"email": "sendmsg2siva@gmail.com"
 	},
+	"repository": {
+		"type": "git",
+		"url": "https://github.com/R35007/data-size-count"
+	},
+	"keywords": [
+		"selected",
+		"lines",
+		"count",
+		"size",
+		"length",
+		"data",
+		"words",
+		"status"
+	],
 	"engines": {
 		"vscode": "^1.50.0"
 	},
