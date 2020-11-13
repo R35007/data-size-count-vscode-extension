@@ -2,7 +2,7 @@
 	"name": "data-size-count",
 	"displayName": "Data Size Count",
 	"description": "Shows the selected JSON object or array size, lines count, words count",
-	"version": "0.0.3",
+	"version": "0.0.4",
 	"icon": "images/thinker.png",
 	"publisher": "Thinker",
 	"license": "MIT",
