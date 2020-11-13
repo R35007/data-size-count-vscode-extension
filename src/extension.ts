@@ -99,7 +99,7 @@ const getWordsCount = (editor: vscode.TextEditor | undefined) => {
     selectedText = selectedText.trim();
     selectedText = selectedText.split(" ");
     selectedText = selectedText.map((s: string) => (s ? s.trim() : s));
-    size = selectedText.filter(String).length;
+    size = selectedText.filter(String).filter((s:string) => s && s.length>=3).length;
   }
 
   return size;

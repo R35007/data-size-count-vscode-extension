@@ -2,7 +2,7 @@
 	"name": "data-size-count",
 	"displayName": "Data Size Count",
 	"description": "Shows the selected JSON object or array size, lines count, words count",
-	"version": "0.0.2",
+	"version": "0.0.3",
 	"icon": "images/thinker.png",
 	"publisher": "Thinker",
 	"license": "MIT",
@@ -25,7 +25,7 @@
 		"status"
 	],
 	"engines": {
-		"vscode": "^1.50.0"
+		"vscode": "^1.30.0"
 	},
 	"categories": [
 		"Other"
@@ -42,7 +42,7 @@
 		"pretest": "npm run compile && npm run lint"
 	},
 	"devDependencies": {
-		"@types/vscode": "^1.50.0",
+		"@types/vscode": "^1.30.0",
 		"@types/node": "^12.11.7",
 		"eslint": "^7.9.0",
 		"@typescript-eslint/eslint-plugin": "^4.1.1",
