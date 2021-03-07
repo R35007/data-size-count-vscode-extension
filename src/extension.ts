@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+const durableJsonLint = require('durable-json-lint')
 
 let myStatusBarItem: vscode.StatusBarItem;
 
@@ -61,17 +62,17 @@ const getArrayObjectSize = (editor: vscode.TextEditor | undefined) => {
 
   if (editor) {
     const selection = editor.selection;
-    const selectedText = editor.document.getText(selection);
+    const selectedText = editor.document.getText(selection)?.trim();
 
     try {
-      const textToParse = selectedText.trim().endsWith(",") ? selectedText.slice(0, -1) : selectedText;
-      const data = JSON.parse(textToParse);
+      const textToParse = selectedText.endsWith(",") || selectedText.endsWith(";") ? selectedText.slice(0, -1) : selectedText;
+      const data = JSON.parse(durableJsonLint(textToParse).json);
       if (data && Array.isArray(data)) {
         arraySize = data.length;
       } else if (data && typeof data === "object" && !Array.isArray(data) && data !== null) {
         objectSize = Object.entries(data).length;
       }
-    } catch (_err) {}
+    } catch (_err) { }
   }
 
   return { arraySize, objectSize };
@@ -99,7 +100,7 @@ const getWordsCount = (editor: vscode.TextEditor | undefined) => {
     selectedText = selectedText.trim();
     selectedText = selectedText.split(" ");
     selectedText = selectedText.map((s: string) => (s ? s.trim() : s));
-    size = selectedText.filter(String).filter((s:string) => s && s.length>=3).length;
+    size = selectedText.filter(String).filter((s: string) => s && s.length >= 3).length;
   }
 
   return size;

@@ -1,3 +1,6 @@
+## v0.0.5
+
+  - handled malformedJSON selection
 ## v0.0.4
 
   - bug fix.

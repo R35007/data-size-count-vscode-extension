@@ -2,7 +2,7 @@
 	"name": "data-size-count",
 	"displayName": "Data Size Count",
 	"description": "Shows the selected JSON object or array size, lines count, words count",
-	"version": "0.0.4",
+	"version": "0.0.5",
 	"icon": "images/thinker.png",
 	"publisher": "Thinker",
 	"license": "MIT",
@@ -48,5 +48,8 @@
 		"@typescript-eslint/eslint-plugin": "^4.1.1",
 		"@typescript-eslint/parser": "^4.1.1",
 		"typescript": "^4.0.2"
+	},
+	"dependencies": {
+		"durable-json-lint": "0.0.3"
 	}
 }
