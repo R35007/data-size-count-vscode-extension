@@ -2,7 +2,7 @@
 	"name": "data-size-count",
 	"displayName": "Data Size Count",
 	"description": "Shows the selected JSON object or array size, lines count, words count",
-	"version": "0.0.5",
+	"version": "0.0.6",
 	"icon": "images/thinker.png",
 	"publisher": "Thinker",
 	"license": "MIT",
@@ -12,7 +12,7 @@
 	},
 	"repository": {
 		"type": "git",
-		"url": "https://github.com/R35007/data-size-count"
+		"url": "https://github.com/R35007/data-size-count-vscode-extension"
 	},
 	"keywords": [
 		"selected",
