@@ -1,5 +1,11 @@
 # Data Size Count
 
-This is a simple extension that adds a status bar entry showing the current number of selected lines, words, array length or object size.
+Simple extension that helps to see the following details in the statusbar
 
-![Show number of selected lines, words, array length, object size](https://github.com/R35007/data-size-count/blob/master/preview.gif?raw=true)
+- File Size
+- No of selected Words
+- No of selected Lines
+- Array Length if the selected data is an array
+- Object Size if the selected data is an object
+
+![Data Size Count](./images/preview.gif)

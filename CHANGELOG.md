@@ -1,14 +1,16 @@
 ## v0.0.6
 
-  - updated repo url
+- updated repo url
+- Added File Size in status bar
+- Added icons to statusbar details
 
 ## v0.0.5
 
-  - handled malformedJSON selection
-  
+- handled malformedJSON selection
+
 ## v0.0.4
 
-  - bug fix.
+- bug fix.
 
 ## v0.0.3
 
