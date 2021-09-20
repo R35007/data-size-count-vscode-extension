@@ -1,3 +1,7 @@
+## v0.0.7
+
+- Changed Details formate to `FileSize LinesCount : WordsCount : DataCount`
+
 ## v0.0.6
 
 - updated repo url

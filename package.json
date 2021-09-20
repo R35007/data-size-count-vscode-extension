@@ -2,7 +2,7 @@
 	"name": "data-size-count",
 	"displayName": "Data Size Count",
 	"description": "Shows : File Size, Words count, Lines count, Array Length, Object size",
-	"version": "0.0.6",
+	"version": "0.0.7",
 	"icon": "images/data-size-count-logo.png",
 	"publisher": "Thinker",
 	"license": "MIT",

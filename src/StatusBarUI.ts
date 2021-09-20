@@ -9,7 +9,7 @@ export class StatusbarUi {
   static get statusBarItem() {
     if (!StatusbarUi._statusBarItem) {
       StatusbarUi._statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
-      StatusbarUi.statusBarItem.tooltip = 'FileSize Word:Line DataCount';
+      StatusbarUi.statusBarItem.tooltip = 'Show Details';
       StatusbarUi.statusBarItem.command = SHOW_DETAILS;
     }
     return StatusbarUi._statusBarItem;
@@ -38,7 +38,7 @@ export class StatusbarUi {
   showInformation = () => {
     const { fileSize, arrayLength, objectSize, linesCount, wordsCount, type } = this.details;
     let infoText = `File Size: ${fileSize}`;
-    infoText += wordsCount || linesCount ? `, Word(s): ${wordsCount}, Line(s): ${linesCount}` : '';
+    infoText += wordsCount || linesCount ? `, Line(s): ${linesCount}, Word(s): ${wordsCount}` : '';
     infoText +=
       type === 'Array' ? `, Array Length: ${arrayLength}` : type === 'Object' ? `, Object Size: ${objectSize}` : '';
     vscode.window.showInformationMessage(infoText);
@@ -55,8 +55,8 @@ export class StatusbarUi {
       StatusbarUi.statusBarItem.show();
 
       let detailsFormat = `$(file) ${fileSize}`;
-      detailsFormat += wordsCount || linesCount ? `  $(list-selection) ${wordsCount}:${linesCount}` : '';
-      detailsFormat += type === 'Array' ? `  [${arrayLength}]` : type === 'Object' ? `  {${objectSize}}` : '';
+      detailsFormat += wordsCount || linesCount ? `  ${linesCount} : ${wordsCount}` : '';
+      detailsFormat += type === 'Array' ? ` : [${arrayLength}]` : type === 'Object' ? ` : {${objectSize}}` : '';
 
       StatusbarUi.statusBarItem.text = detailsFormat;
     } catch (err) {
