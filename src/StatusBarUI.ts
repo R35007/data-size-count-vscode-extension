@@ -1,6 +1,7 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { SHOW_DETAILS } from './enum';
+import { Settings } from './Settings';
 const durableJsonLint = require('durable-json-lint');
 
 export class StatusbarUi {
@@ -8,7 +9,10 @@ export class StatusbarUi {
 
   static get statusBarItem() {
     if (!StatusbarUi._statusBarItem) {
-      StatusbarUi._statusBarItem = vscode.window.createStatusBarItem(vscode.StatusBarAlignment.Left, 1);
+      StatusbarUi._statusBarItem = vscode.window.createStatusBarItem(
+        vscode.StatusBarAlignment[Settings.position],
+        Settings.priority
+      );
       StatusbarUi.statusBarItem.tooltip = 'Show Details';
       StatusbarUi.statusBarItem.command = SHOW_DETAILS;
     }
@@ -31,34 +35,43 @@ export class StatusbarUi {
     const textRange = new vscode.Range(firstLine.range.start, lastLine.range.end);
 
     const editorText = document.getText(textRange);
-    const selectedText = document.getText(selection);
+    const selectedText = selections.map((s) => editor.document.getText(s)).join(' ');
     return { editor, document, selection, selections, textRange, editorText, selectedText };
   }
 
   showInformation = () => {
-    const { fileSize, arrayLength, objectSize, linesCount, wordsCount, type } = this.details;
+    const { fileSize, dataCount, linesCount, wordsCount, type } = this.details;
     let infoText = `File Size: ${fileSize}`;
     infoText += wordsCount || linesCount ? `, Line(s): ${linesCount}, Word(s): ${wordsCount}` : '';
     infoText +=
-      type === 'Array' ? `, Array Length: ${arrayLength}` : type === 'Object' ? `, Object Size: ${objectSize}` : '';
+      type === 'Array' ? `, Array Length: ${dataCount}` : type === 'Object' ? `, Object Size: ${dataCount}` : '';
     vscode.window.showInformationMessage(infoText);
   };
 
   updateStatusBarItem = () => {
     try {
-      const { fileSize, arrayLength, objectSize, linesCount, wordsCount, type } = this.details;
+      let detailsFormat = [];
+      const details = this.details;
 
-      if (!fileSize) {
-        StatusbarUi.statusBarItem.hide();
-        return;
+      if (Object.values(details).every((detail) => !detail)) {
+        return StatusbarUi.statusBarItem.hide();
       }
+
       StatusbarUi.statusBarItem.show();
 
-      let detailsFormat = `$(file) ${fileSize}`;
-      detailsFormat += wordsCount || linesCount ? `  ${linesCount} : ${wordsCount}` : '';
-      detailsFormat += type === 'Array' ? ` : [${arrayLength}]` : type === 'Object' ? ` : {${objectSize}}` : '';
+      if (Settings.visibility.fileSize && details.fileSize) {
+        const fileSizeStr = this.interpolate({ fileSize: details.fileSize }, Settings.fileSizeformat);
+        detailsFormat.push(fileSizeStr);
+      }
 
-      StatusbarUi.statusBarItem.text = detailsFormat;
+      if (Settings.visibility.selection && details.linesCount) {
+        const { fileSize, ...selectionCounts } = details;
+        const countsStr = this.interpolate(selectionCounts, Settings.countsformat);
+        const finalStr = countsStr.replace(/( \: )$/, ''); // replaces 11 : 23 : -> 11 : 23
+        detailsFormat.push(finalStr);
+      }
+
+      StatusbarUi.statusBarItem.text = detailsFormat.join(Settings.itemSeperator);
     } catch (err) {
       console.log(err);
     }
@@ -66,7 +79,7 @@ export class StatusbarUi {
 
   get details() {
     const { document, selectedText, selections } = this.editorProps;
-    const { arrayLength, objectSize, type } = this.getDataCount(selectedText);
+    const { dataCountWithBrackets, dataCount, type } = this.getDataCount(selectedText);
     const linesCount = this.getLinesCount(selections);
     const wordsCount = this.getWordsCount(selectedText);
 
@@ -75,16 +88,16 @@ export class StatusbarUi {
 
     return {
       fileSize,
-      arrayLength,
-      objectSize,
       linesCount,
       wordsCount,
+      dataCountWithBrackets,
+      dataCount,
       type,
     };
   }
 
   getDataCount = (selectedText: string = '') => {
-    const dataCount = { arrayLength: 0, objectSize: 0, type: '' };
+    const dataCount = { dataCountWithBrackets: '', dataCount: '', type: '' };
 
     try {
       const durableText = durableJsonLint(selectedText.replace(/(,|;)$/gi, ''));
@@ -93,11 +106,13 @@ export class StatusbarUi {
       if (!data) return dataCount;
 
       if (Array.isArray(data)) {
-        dataCount.arrayLength = data.length;
+        dataCount.dataCount = '' + data.length;
         dataCount.type = 'Array';
+        dataCount.dataCountWithBrackets = `[${data.length}]`;
       } else if (typeof data === 'object' && !Array.isArray(data)) {
-        dataCount.objectSize = Object.entries(data).length;
+        dataCount.dataCount = '' + Object.entries(data).length;
         dataCount.type = 'Object';
+        dataCount.dataCountWithBrackets = `{${Object.entries(data).length}}`;
       }
     } catch (_err) {}
 
@@ -106,9 +121,22 @@ export class StatusbarUi {
 
   getLinesCount = (selections: vscode.Selection[] = []): number => {
     let lines = 0;
-    if (selections.every((s) => s.isEmpty)) return 0;
+    if (selections.every((s) => s.isEmpty)) return 0; // returns If there is no selection
 
-    lines = selections.reduce((prev, curr) => prev + (curr.end.line - curr.start.line), 0) + 1;
+    const selectedLines: number[] = [];
+
+    lines = selections.reduce((prev, curr) => {
+      const startLine = curr.start.line;
+      const endLine = curr.end.line;
+      let lineIncrement = 0;
+
+      // This is to avoid counting already selected line by a multi cursor selection
+      if (!selectedLines.includes(startLine)) {
+        lineIncrement = 1;
+        selectedLines.push(startLine);
+      }
+      return prev + (endLine - startLine) + lineIncrement;
+    }, 0);
     return lines;
   };
 
@@ -136,5 +164,11 @@ export class StatusbarUi {
       return bytes + ' ' + sizes[i];
     }
     return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
+  };
+
+  interpolate = (object: Object, format: string) => {
+    const keys = Object.keys(object);
+    const values = Object.values(object);
+    return new Function(...keys, `return \`${format}\`;`)(...values);
   };
 }

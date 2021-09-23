@@ -39,6 +39,62 @@
 	"activationEvents": [
 		"*"
 	],
+	"contributes": {
+		"configuration": {
+			"title": "Data Size Count",
+			"properties": {
+				"data-size-count.statusBar.position": {
+					"type": "string",
+					"default": "Left",
+					"enum": [
+						"Right",
+						"Left"
+					],
+					"description": "Set Custom Statusbar position"
+				},
+				"data-size-count.statusBar.priority": {
+					"type": "number",
+					"default": 1,
+					"description": "The priority of the statusbar. Higher value means the statusbar should be shown more to the left"
+				},
+				"data-size-count.statusBar.fileSizeformat": {
+					"type": "string",
+					"default": "$(file) ${fileSize}",
+					"description": "You can use these variables to custom display format: ${fileSize}"
+				},
+				"data-size-count.statusBar.countsformat": {
+					"type": "string",
+					"default": "${linesCount} : ${wordsCount} : ${dataCountWithBrackets}",
+					"description": "You can use these variables to custom display format: ${linesCount} ${wordsCount} ${dataCount} ${dataCountWithBrackets}"
+				},
+				"data-size-count.statusBar.visibility": {
+					"type": "object",
+					"default": {
+						"fileSize": true,
+						"selection": true
+					},
+					"properties": {
+						"fileSize": {
+							"type": "boolean",
+							"default": true,
+							"description": "Set to true to show File Size in Statusbar"
+						},
+						"selection": {
+							"type": "boolean",
+							"default": true,
+							"description": "Set to true to show Selection Count details in Statusbar"
+						}
+					},
+					"description": "Show/Hide File Size or Selection Count details in statusbar"
+				},
+				"data-size-count.statusBar.itemSeperator": {
+					"type": "string",
+					"default": "  ",
+					"description": "Separator between File Size and Selection Counts in statusbar. The default value is 2 blank spaces."
+				}
+			}
+		}
+	},
 	"main": "./out/extension.js",
 	"scripts": {
 		"vscode:prepublish": "npm run compile",
