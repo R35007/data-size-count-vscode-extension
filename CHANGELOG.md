@@ -1,4 +1,4 @@
-## v0.0.7
+## v0.0.8
 
 Added Custom Display Format and some additional statusbar settings
 
