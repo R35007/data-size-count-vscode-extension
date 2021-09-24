@@ -40,10 +40,10 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 
 - `data-size-count.statusBar.position` - Set Custom Statusbar position.
 - `data-size-count.statusBar.priority` - The priority of the statusbar. Higher value means the statusbar should be shown more to the left.
-- `data-size-count.statusBar.fileSizeformat` - You can use these variables to custom display format: \${fileSize}.
-- `data-size-count.statusBar.countsformat` - You can use these variables to custom display format: \${linesCount} \${wordsCount} \${dataCount} \${dataCountWithBrackets}.
+- `data-size-count.statusBar.fileSizeFormat` - You can use these variables to custom display format: \${fileSize}.
+- `data-size-count.statusBar.selectionCountFormat` - You can use these variables to custom display format: \${linesCount} \${wordsCount}.
+- `data-size-count.statusBar.dataCountFormat` - You can use these variables to custom display format: \${dataCountWithBrackets}.
 - `data-size-count.statusBar.visibility` - Show/Hide File Size or Selection Count details in statusbar.
-- `data-size-count.statusBar.itemSeperator` - Separator between File Size and Selection Counts in statusbar. The default value is 2 blank spaces.
 
 ## Preview
 

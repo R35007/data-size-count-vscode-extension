@@ -60,18 +60,21 @@ export class StatusbarUi {
       StatusbarUi.statusBarItem.show();
 
       if (Settings.visibility.fileSize && details.fileSize) {
-        const fileSizeStr = this.interpolate({ fileSize: details.fileSize }, Settings.fileSizeformat);
+        const fileSizeStr = this.interpolate(details, Settings.fileSizeFormat);
         detailsFormat.push(fileSizeStr);
       }
 
       if (Settings.visibility.selection && details.linesCount) {
-        const { fileSize, ...selectionCounts } = details;
-        const countsStr = this.interpolate(selectionCounts, Settings.countsformat);
-        const finalStr = countsStr.replace(/( \: )$/, ''); // replaces 11 : 23 : -> 11 : 23
-        detailsFormat.push(finalStr);
+        const countsStr = this.interpolate(details, Settings.selectionCountFormat);
+        detailsFormat.push(countsStr);
       }
 
-      StatusbarUi.statusBarItem.text = detailsFormat.join(Settings.itemSeperator);
+      if (Settings.visibility.data && ['Array', 'Object'].includes(details.type)) {
+        const countsStr = this.interpolate(details, Settings.dataCountFormat);
+        detailsFormat.push(countsStr);
+      }
+
+      StatusbarUi.statusBarItem.text = detailsFormat.join('');
     } catch (err) {
       console.log(err);
     }

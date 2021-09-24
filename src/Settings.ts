@@ -16,18 +16,16 @@ export class Settings {
   static get priority() {
     return (Settings.getSettings('priority') as number) || -1;
   }
-  static get fileSizeformat() {
-    return (Settings.getSettings('fileSizeformat') as string) || '$(file) ${fileSize}';
+  static get fileSizeFormat() {
+    return (Settings.getSettings('fileSizeFormat') as string) || '$(file) ${fileSize}';
   }
-  static get countsformat() {
-    return (
-      (Settings.getSettings('countsformat') as string) || '${linesCount} : ${wordsCount} : ${dataSizeWithBrackets}'
-    );
+  static get selectionCountFormat() {
+    return (Settings.getSettings('selectionCountFormat') as string) || '  ${linesCount} : ${wordsCount}';
+  }
+  static get dataCountFormat() {
+    return (Settings.getSettings('dataCountFormat') as string) || ' : ${dataCountWithBrackets}';
   }
   static get visibility() {
-    return (Settings.getSettings('visibility') as { fileSize: boolean; selection: boolean }) || {};
-  }
-  static get itemSeperator() {
-    return (Settings.getSettings('itemSeperator') as string) || '  ';
+    return (Settings.getSettings('visibility') as { fileSize: boolean; selection: boolean; data: boolean }) || {};
   }
 }

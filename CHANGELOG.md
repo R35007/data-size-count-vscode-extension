@@ -1,3 +1,9 @@
+## v0.0.9
+
+- removed `data-size-count.statusBar.itemSeperator`
+- renamed `data-size-count.statusBar.countsformat` to `data-size-count.statusBar.selectionCountFormat`
+- added `data-size-count.statusBar.dataCountFormat`
+
 ## v0.0.8
 
 Added Custom Display Format and some additional statusbar settings
