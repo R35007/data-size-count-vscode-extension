@@ -1,3 +1,7 @@
+## v0.0.10
+
+- support to count selected HTML tag children - For now its count for tags that are selected under `<body>` tag.
+
 ## v0.0.9
 
 - removed `data-size-count.statusBar.itemSeperator`

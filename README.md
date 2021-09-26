@@ -9,15 +9,15 @@ Display following details in the vscode statusbar
 - Number of selected Words
 - Array Length if the selected data is an array
 - Object Size if the selected data is an object
+- Children elements count if the selected text is an HTML tag.
 
 ## Screenshots
 
 <img height="30" src="./images/ScreenShot_1.png">
 <img height="30" src="./images/ScreenShot_2.png">
-<br/>
-
 <img height="30" src="./images/ScreenShot_3.png">
 <img height="30" src="./images/ScreenShot_4.png">
+<img height="30" src="./images/ScreenShot_5.png">
 
 ## Display Format
 
@@ -26,7 +26,8 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 ### Default Format :
 
 - `data-size-count.statusBar.fileSizeformat` - "\$(file) \${fileSize}"
-- `data-size-count.statusBar.countsformat` - "\${linesCount} : \${wordsCount} : \${dataCountWithBrackets}"
+- `data-size-count.statusBar.selectionCountFormat` - " \${linesCount} : \${wordsCount}"
+- `data-size-count.statusBar.dataCountFormat` - " : \${dataCountWithBrackets}"
 
 ### Variable Description :
 
@@ -47,4 +48,4 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 
 ## Preview
 
-![Data Size Count](./images/preview.gif)
+<img width="600" src="./images/preview.gif">

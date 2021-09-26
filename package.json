@@ -2,7 +2,7 @@
 	"name": "data-size-count",
 	"displayName": "Data Size Count",
 	"description": "Shows : File Size, Words count, Lines count, Array Length, Object size",
-	"version": "0.0.9",
+	"version": "0.0.10",
 	"icon": "images/data-size-count-logo.png",
 	"publisher": "Thinker",
 	"license": "MIT",
@@ -20,6 +20,10 @@
 		"count",
 		"size",
 		"file size",
+		"tag count",
+		"children count",
+		"html tag count",
+		"tags count",
 		"array length",
 		"object size",
 		"data count",
@@ -122,6 +126,7 @@
 		"typescript": "^4.0.2"
 	},
 	"dependencies": {
-		"durable-json-lint": "0.0.3"
+		"durable-json-lint": "0.0.3",
+		"jsdom": "^17.0.0"
 	}
 }
