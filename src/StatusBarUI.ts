@@ -43,7 +43,7 @@ export class StatusbarUi {
         detailsFormat.push(countsStr);
       }
 
-      if (Settings.visibility.data && ['Array', 'Object', 'HTML'].includes(details.dataType)) {
+      if (Settings.visibility.data && ['Array', 'Object', 'HTML'].includes(details.dataType) && details.dataCount) {
         const countsStr = this.interpolate(details, `, ${details.dataCountDescription}: ${details.dataCount}`);
         detailsFormat.push(countsStr);
       }
@@ -75,7 +75,7 @@ export class StatusbarUi {
         detailsFormat.push(countsStr);
       }
 
-      if (Settings.visibility.data && ['Array', 'Object', 'HTML'].includes(details.dataType)) {
+      if (Settings.visibility.data && ['Array', 'Object', 'HTML'].includes(details.dataType) && details.dataCount) {
         const countsStr = this.interpolate(details, Settings.dataCountFormat);
         detailsFormat.push(countsStr);
       }

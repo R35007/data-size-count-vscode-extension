@@ -1,3 +1,9 @@
+## v0.0.11
+
+- Counts not showing up on a new unsaved file - `Fixed`
+- More durable JSON - gets selected JSON object size or Array length even if it contains any script variables
+- If the we select one single tag then it shows number of child elements. If we select multiple tags it shows number of selected tags.
+
 ## v0.0.10
 
 - support to count selected HTML tag children - For now its count for tags that are selected under `<body>` tag.

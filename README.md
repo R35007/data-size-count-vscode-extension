@@ -25,7 +25,7 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 
 ### Default Format :
 
-- `data-size-count.statusBar.fileSizeformat` - "\$(file) \${fileSize}"
+- `data-size-count.statusBar.fileSizeformat` - "\$(file-text) \${fileSize}"
 - `data-size-count.statusBar.selectionCountFormat` - " \${linesCount} : \${wordsCount}"
 - `data-size-count.statusBar.dataCountFormat` - " : \${dataCountWithBrackets}"
 
@@ -34,8 +34,8 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 - `${fileSize}` - Gives the ActiveTextEditor File Size.
 - `${linesCount}` - Gives the selected line(s) count.
 - `${wordsCount}` - Gives the selected word(s) count.
-- `${dataCount}` - Gives the selected JSON data count. It can be either Array length or an Object size.
-- `${dataCountWithBrackets}` - Gives the selected JSON data count with brackets. ex : `[12]` - Array or `{12}` - Object.
+- `${dataCount}` - Gives the selected data count. It can be either Array length or an Object size or HTML Elements count.
+- `${dataCountWithBrackets}` - Gives the selected data count with brackets. ex : `[12]` - Array or `{12}` - Object or `<12>` - HTML.
 
 ## Settings
 

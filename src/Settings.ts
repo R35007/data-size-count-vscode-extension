@@ -17,7 +17,7 @@ export class Settings {
     return (Settings.getSettings('priority') as number) || -1;
   }
   static get fileSizeFormat() {
-    return (Settings.getSettings('fileSizeFormat') as string) || '$(file) ${fileSize}';
+    return (Settings.getSettings('fileSizeFormat') as string) || '$(file-text) ${fileSize}';
   }
   static get selectionCountFormat() {
     return (Settings.getSettings('selectionCountFormat') as string) || '  ${linesCount} : ${wordsCount}';

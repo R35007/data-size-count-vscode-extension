@@ -28,7 +28,7 @@ export class DataSizeCount {
     this.linesCount = this.getLinesCount(selections);
     this.wordsCount = this.getWordsCount(selectedText);
 
-    this.fileSize = filePath ? this.convertBytes(fs.statSync(filePath).size) : false;
+    this.fileSize = this.getFileSize(filePath);
   }
 
   // Function to return all selected Texts and other editor details
@@ -48,40 +48,48 @@ export class DataSizeCount {
     return { editor, document, selection, selections, filePath, textRange, editorText, selectedText };
   }
 
+  getFileSize = (filePath: string): string => {
+    if (!filePath) return '';
+    if (fs.existsSync(filePath)) {
+      return this.convertBytes(fs.statSync(filePath).size);
+    }
+    return '';
+  };
+
   getDataDetails = (selectedText: string = ''): DataDetails => {
     const dataDetails: DataDetails = {
       dataCountDescription: '',
       dataCountWithBrackets: '',
-      dataCount: '',
+      dataCount: 0,
       dataType: 'Other',
     };
 
-    const json = this.getValidJSON(selectedText);
     const node = this.getValidHTML(selectedText);
+    const json = this.getValidJSON(selectedText);
 
-    if (json) {
+    if (node) {
+      const elementCount = node.length > 1 ? node.length : node[0].children.length;
+
+      dataDetails.dataType = 'HTML';
+      dataDetails.dataCount = elementCount;
+      dataDetails.dataCountWithBrackets = `<${elementCount}>`;
+      dataDetails.dataCountDescription = node.length > 1 ? 'Element(s)' : 'Child Element(s)';
+    } else if (json) {
       if (Array.isArray(json)) {
         const length = json.length;
 
         dataDetails.dataType = 'Array';
-        dataDetails.dataCount = '' + length;
+        dataDetails.dataCount = length;
         dataDetails.dataCountWithBrackets = `[${length}]`;
         dataDetails.dataCountDescription = `Array Length`;
       } else if (typeof json === 'object' && !Array.isArray(json)) {
         const size = Object.entries(json).length;
 
         dataDetails.dataType = 'Object';
-        dataDetails.dataCount = '' + size;
+        dataDetails.dataCount = size;
         dataDetails.dataCountWithBrackets = `{${size}}`;
         dataDetails.dataCountDescription = `Object Size`;
       }
-    } else if (node) {
-      const childElementCount = node.childElementCount;
-
-      dataDetails.dataType = 'HTML';
-      dataDetails.dataCount = '' + childElementCount;
-      dataDetails.dataCountWithBrackets = `<${childElementCount}>`;
-      dataDetails.dataCountDescription = `Child Element(s)`;
     }
 
     return dataDetails;
@@ -140,16 +148,21 @@ export class DataSizeCount {
   // Checks if a given string is a valid JSON and returns the JSON data if true.
   getValidJSON(selectedText: string): Object | any[] | undefined {
     try {
-      const durableText = durableJsonLint(selectedText.replace(/(,|;)$/gi, ''));
+      const escapedText = this.jsonEscape(selectedText);
+      const durableText = durableJsonLint(escapedText);
       const data = JSON.parse(durableText?.json);
       return data;
-    } catch (err) {}
+    } catch (err) {
+      console.log(err);
+    }
   }
 
+  // TODO: Get Tags even if selected text is a html or body tag
+  // For now it returns tags that are selected only under a body tag
   // Checks if a given string is a valid HTML and returns the DOM if true.
   getValidHTML(selectedText: string) {
     try {
-      const escapedText = this.escape(selectedText);
+      const escapedText = this.tagEscape(selectedText);
 
       // returns false if the given string is not a valid HTML Tag
       if (!(escapedText.startsWith('<') && escapedText.endsWith('>'))) return;
@@ -158,20 +171,45 @@ export class DataSizeCount {
       const dom = new JSDOM(`<div id="_virtualDom">${selectedText}</div>`);
       const _virtualDom = dom.window.document.querySelector('#_virtualDom');
 
-      // returns false if the given string is not a valid HTML
-      if (this.escape(_virtualDom.innerHTML) !== escapedText) return;
-
-      return _virtualDom.children[0];
-    } catch (err) {}
+      return _virtualDom.children;
+    } catch (err) {
+      console.log(err);
+    }
   }
 
+  // TODO: Remove all special characters
   // removes Enter and Spaces for now
-  escape(selectedText: string) {
-    const str = selectedText
+  tagEscape(selectedText: string): string {
+    const escapedString = selectedText
       .trim()
       .replace(/\n/gi, '') // removes Enter Charecter
-      .replace(/\s/g, ''); // removes spaces
-    return str;
+      .replace(/\s/gi, '') // removes spaces
+      .trim();
+    return escapedString;
+  }
+
+  // TODO: Optimize the code
+  // removes all Enter, Spaces, Special charaters that are not a JSON compatible
+  jsonEscape(selectedText: string): string {
+    const escapedString = selectedText
+      .trim()
+      .replace(/\n/gi, '') // removes next line
+      .replace(/\s/gi, '') // removes spaces
+      .replace(/(\}\,\])/gi, '}]') // replaces },] -> }]
+      .replace(/(\]\,\})/gi, ']}') // replaces ],} -> ]}
+      .replace(/(,)$/gi, '') // removes , at the end of the selected text
+      .replace(/(\<.*?\>)/gi, 'tag') // replace <...> -> tag
+      .replace(/(\$\{.*?\})/gi, 'text') // replace ${...} to text
+
+      // TODO: Optimize this pattern
+      // removes all special charactors except {[:,'"]}
+      // removes ~!@#$%^&*()_+-=();\/<>.?
+      .replace(/(\~|\!|\@|\#|\$|\%|\^|\&|\*|\_|\+|\-|\=|\(|\)|\;|\/|\\|\<|\>|\.|\?)/gi, '')
+
+      .replace(/\`/gi, "'") // replace back tick with single quote
+      .replace(/\s/gi, '') // removes spaces again
+      .trim();
+    return escapedString;
   }
 }
 
@@ -187,7 +225,7 @@ interface EditorProps {
 }
 
 interface DataDetails {
-  dataCount: string;
+  dataCount: number;
   dataCountWithBrackets: string;
   dataCountDescription: string;
   dataType: 'Array' | 'Object' | 'HTML' | 'Other';
