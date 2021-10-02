@@ -1,3 +1,8 @@
+## v0.0.12
+
+- Code Optimized.
+- Tried to get counts in larger json file. May take few seconds to get the counts.
+
 ## v0.0.11
 
 - Counts not showing up on a new unsaved file - `Fixed`

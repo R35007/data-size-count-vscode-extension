@@ -33,17 +33,17 @@ export class StatusbarUi {
 
       StatusbarUi.statusBarItem.show();
 
-      if (Settings.visibility.fileSize && details.fileSize) {
+      if (details.fileSize) {
         const fileSizeStr = this.interpolate(details, 'File Size: ${fileSize}');
         detailsFormat.push(fileSizeStr);
       }
 
-      if (Settings.visibility.selection && details.linesCount) {
+      if (details.linesCount) {
         const countsStr = this.interpolate(details, ', Line(s): ${linesCount}, Word(s):${wordsCount}');
         detailsFormat.push(countsStr);
       }
 
-      if (Settings.visibility.data && ['Array', 'Object', 'HTML'].includes(details.dataType) && details.dataCount) {
+      if (details.dataCount) {
         const countsStr = this.interpolate(details, `, ${details.dataCountDescription}: ${details.dataCount}`);
         detailsFormat.push(countsStr);
       }
@@ -65,17 +65,17 @@ export class StatusbarUi {
 
       StatusbarUi.statusBarItem.show();
 
-      if (Settings.visibility.fileSize && details.fileSize) {
+      if (details.fileSize) {
         const fileSizeStr = this.interpolate(details, Settings.fileSizeFormat);
         detailsFormat.push(fileSizeStr);
       }
 
-      if (Settings.visibility.selection && details.linesCount) {
+      if (details.linesCount) {
         const countsStr = this.interpolate(details, Settings.selectionCountFormat);
         detailsFormat.push(countsStr);
       }
 
-      if (Settings.visibility.data && ['Array', 'Object', 'HTML'].includes(details.dataType) && details.dataCount) {
+      if (details.dataCount) {
         const countsStr = this.interpolate(details, Settings.dataCountFormat);
         detailsFormat.push(countsStr);
       }

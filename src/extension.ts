@@ -12,7 +12,6 @@ export function activate(context: vscode.ExtensionContext) {
   context.subscriptions.push(StatusbarUi.statusBarItem);
 
   // register some listener that make sure the status bar item is always up-to-date
-  context.subscriptions.push(vscode.window.onDidChangeActiveTextEditor(statusbarUi.updateStatusBarItem));
   context.subscriptions.push(vscode.window.onDidChangeTextEditorSelection(statusbarUi.updateStatusBarItem));
 
   // Show Initial Details

@@ -1,5 +1,6 @@
 import * as fs from 'fs';
 import * as vscode from 'vscode';
+import { Settings } from './Settings';
 const durableJsonLint = require('durable-json-lint');
 const jsdom = require('jsdom');
 
@@ -19,16 +20,22 @@ export class DataSizeCount {
     this.editor = editor;
     const { selectedText, selections, filePath } = this.getEditorProps(this.editor);
 
-    const { dataType, dataCount, dataCountWithBrackets, dataCountDescription } = this.getDataDetails(selectedText);
-    this.dataType = dataType;
-    this.dataCount = dataCount;
-    this.dataCountWithBrackets = dataCountWithBrackets;
-    this.dataCountDescription = dataCountDescription;
+    if(Settings.visibility.data){
+      const { dataType, dataCount, dataCountWithBrackets, dataCountDescription } = this.getDataDetails(selectedText);
+      this.dataType = dataType;
+      this.dataCount = dataCount;
+      this.dataCountWithBrackets = dataCountWithBrackets;
+      this.dataCountDescription = dataCountDescription;
+    }
 
-    this.linesCount = this.getLinesCount(selections);
-    this.wordsCount = this.getWordsCount(selectedText);
+    if(Settings.visibility.selection){
+      this.linesCount = this.getLinesCount(selections);
+      this.wordsCount = this.getWordsCount(selectedText);
+    }
 
-    this.fileSize = this.getFileSize(filePath);
+    if(Settings.visibility.fileSize){
+      this.fileSize = this.getFileSize(filePath);
+    }
   }
 
   // Function to return all selected Texts and other editor details
@@ -195,16 +202,16 @@ export class DataSizeCount {
       .trim()
       .replace(/\n/gi, '') // removes next line
       .replace(/\s/gi, '') // removes spaces
-      .replace(/(\}\,\])/gi, '}]') // replaces },] -> }]
-      .replace(/(\]\,\})/gi, ']}') // replaces ],} -> ]}
+      .replace(/(\,\])/gi, ']') // replaces ,] -> ]
+      .replace(/(\,\})/gi, '}') // replaces ,} -> }
       .replace(/(,)$/gi, '') // removes , at the end of the selected text
       .replace(/(\<.*?\>)/gi, 'tag') // replace <...> -> tag
       .replace(/(\$\{.*?\})/gi, 'text') // replace ${...} to text
 
       // TODO: Optimize this pattern
       // removes all special charactors except {[:,'"]}
-      // removes ~!@#$%^&*()_+-=();\/<>.?
-      .replace(/(\~|\!|\@|\#|\$|\%|\^|\&|\*|\_|\+|\-|\=|\(|\)|\;|\/|\\|\<|\>|\.|\?)/gi, '')
+      // removes ~!@#$%^&*()_+-=();/|<>.?
+      .replace(/(\~|\!|\@|\#|\$|\%|\^|\&|\*|\_|\+|\-|\=|\(|\)|\;|\/|\|\<|\>|\.|\||\?)/gi, '')
 
       .replace(/\`/gi, "'") // replace back tick with single quote
       .replace(/\s/gi, '') // removes spaces again
