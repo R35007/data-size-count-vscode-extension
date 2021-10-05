@@ -20,21 +20,23 @@ export class DataSizeCount {
     this.editor = editor;
     const { selectedText, selections, filePath } = this.getEditorProps(this.editor);
 
-    if(Settings.visibility.data){
+    if (Settings.visibility.fileSize) {
+      this.fileSize = this.getFileSize(filePath);
+    }
+
+    if (!selectedText?.trim()) return;
+
+    if (Settings.visibility.selection) {
+      this.linesCount = this.getLinesCount(selections);
+      this.wordsCount = this.getWordsCount(selectedText);
+    }
+
+    if (Settings.visibility.data) {
       const { dataType, dataCount, dataCountWithBrackets, dataCountDescription } = this.getDataDetails(selectedText);
       this.dataType = dataType;
       this.dataCount = dataCount;
       this.dataCountWithBrackets = dataCountWithBrackets;
       this.dataCountDescription = dataCountDescription;
-    }
-
-    if(Settings.visibility.selection){
-      this.linesCount = this.getLinesCount(selections);
-      this.wordsCount = this.getWordsCount(selectedText);
-    }
-
-    if(Settings.visibility.fileSize){
-      this.fileSize = this.getFileSize(filePath);
     }
   }
 
@@ -154,8 +156,19 @@ export class DataSizeCount {
 
   // Checks if a given string is a valid JSON and returns the JSON data if true.
   getValidJSON(selectedText: string): Object | any[] | undefined {
+    const escapedText = this.jsonEscape(selectedText);
     try {
-      const escapedText = this.jsonEscape(selectedText);
+      const data = JSON.parse(escapedText);
+      return data;
+    } catch (err) {
+      return this.getDurableJSON(escapedText);
+    }
+  }
+
+  // Makes the selected Text as a more durable JSON using regex and returns JSON data if true.
+  getDurableJSON(selectedText: string): Object | any[] | undefined {
+    try {
+      const escapedText = this.removeSpecialChars(selectedText);
       const durableText = durableJsonLint(escapedText);
       const data = JSON.parse(durableText?.json);
       return data;
@@ -184,38 +197,42 @@ export class DataSizeCount {
     }
   }
 
-  // TODO: Remove all special characters
-  // removes Enter and Spaces for now
   tagEscape(selectedText: string): string {
     const escapedString = selectedText
       .trim()
       .replace(/\n/gi, '') // removes Enter Charecter
-      .replace(/\s/gi, '') // removes spaces
-      .trim();
+      .replace(/\s/gi, ''); // removes spaces
     return escapedString;
   }
 
   // TODO: Optimize the code
-  // removes all Enter, Spaces, Special charaters that are not a JSON compatible
-  jsonEscape(selectedText: string): string {
+  // removes Special charaters that are not a JSON compatible
+  removeSpecialChars(selectedText: string): string {
     const escapedString = selectedText
-      .trim()
-      .replace(/\n/gi, '') // removes next line
-      .replace(/\s/gi, '') // removes spaces
-      .replace(/(\,\])/gi, ']') // replaces ,] -> ]
-      .replace(/(\,\})/gi, '}') // replaces ,} -> }
-      .replace(/(,)$/gi, '') // removes , at the end of the selected text
+      .replace(/(\,\])/g, ']') // replaces ,] -> ]
+      .replace(/(\,\})/g, '}') // replaces ,} -> }
       .replace(/(\<.*?\>)/gi, 'tag') // replace <...> -> tag
       .replace(/(\$\{.*?\})/gi, 'text') // replace ${...} to text
 
       // TODO: Optimize this pattern
       // removes all special charactors except {[:,'"]}
       // removes ~!@#$%^&*()_+-=();/|<>.?
-      .replace(/(\~|\!|\@|\#|\$|\%|\^|\&|\*|\_|\+|\-|\=|\(|\)|\;|\/|\|\<|\>|\.|\||\?)/gi, '')
+      .replace(/(\~|\!|\@|\#|\$|\%|\^|\&|\*|\_|\+|\-|\=|\(|\)|\;|\/|\|\<|\>|\.|\||\?)/g, '')
 
-      .replace(/\`/gi, "'") // replace back tick with single quote
-      .replace(/\s/gi, '') // removes spaces again
+      .replace(/\`/g, "'") // replace back tick with single quote
       .trim();
+    return escapedString;
+  }
+
+  // removes all Enter, Spaces
+  jsonEscape(selectedText: string): string {
+    const escapedString = selectedText
+      .trim()
+      .replace(/\n/g, '') // removes next line
+      .replace(/\s/g, '') // removes spaces
+      .replace(/\r/g, '') // removes carriage return character.
+      .replace(/\t/g, '') // removes tabs
+      .replace(/(,|;)$/g, ''); // removes , ; at the end of the selected text
     return escapedString;
   }
 }

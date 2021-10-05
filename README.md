@@ -9,7 +9,7 @@ Display following details in the vscode statusbar
 - Number of selected Words
 - Array Length if the selected data is an array
 - Object Size if the selected data is an object
-- Children elements count if the selected text is an HTML tag.
+- HTML or XML Tags count if the selected text is an HTML or XML tag.
 
 ## Screenshots
 
@@ -44,7 +44,7 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 - `data-size-count.statusBar.fileSizeFormat` - You can use these variables to custom display format: \${fileSize}.
 - `data-size-count.statusBar.selectionCountFormat` - You can use these variables to custom display format: \${linesCount} \${wordsCount}.
 - `data-size-count.statusBar.dataCountFormat` - You can use these variables to custom display format: \${dataCountWithBrackets}.
-- `data-size-count.statusBar.visibility` - Show/Hide File Size or Selection Count details in statusbar.
+- `data-size-count.statusBar.visibility` - Show/Hide File Size, Lines Count, Words and Data Count details in statusbar.
 
 ## Preview
 
