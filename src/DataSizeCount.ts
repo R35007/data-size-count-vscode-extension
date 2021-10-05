@@ -211,6 +211,7 @@ export class DataSizeCount {
     const escapedString = selectedText
       .replace(/(\,\])/g, ']') // replaces ,] -> ]
       .replace(/(\,\})/g, '}') // replaces ,} -> }
+      .replace(/(\(.*?\))/gi, 'tag') // replace (...) -> tag
       .replace(/(\<.*?\>)/gi, 'tag') // replace <...> -> tag
       .replace(/(\$\{.*?\})/gi, 'text') // replace ${...} to text
 
@@ -221,7 +222,7 @@ export class DataSizeCount {
 
       .replace(/\`/g, "'") // replace back tick with single quote
       .trim();
-    return escapedString;
+    return this.jsonEscape(escapedString);
   }
 
   // removes all Enter, Spaces

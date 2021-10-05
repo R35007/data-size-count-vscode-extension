@@ -1,3 +1,8 @@
+## v0.0.14
+
+- Code Optimized.
+- Bug Fix.
+
 ## v0.0.13
 
 - Code Optimized.
