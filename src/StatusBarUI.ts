@@ -24,7 +24,7 @@ export class StatusbarUi {
 
   showInformation = () => {
     try {
-      let detailsFormat = [];
+      let detailsFormat: string[] = [];
       const details = new DataSizeCount(vscode.window.activeTextEditor);
 
       if (!details.editor) {
@@ -48,7 +48,10 @@ export class StatusbarUi {
         detailsFormat.push(countsStr);
       }
 
-      vscode.window.showInformationMessage(detailsFormat.join(''));
+      const actionTxt = 'Show / Hide';
+      vscode.window.showInformationMessage(detailsFormat.join(''), actionTxt).then((choice) => {
+        choice && choice === actionTxt && this.showHide(details);
+      });
     } catch (err) {
       console.log(err);
     }
@@ -92,5 +95,46 @@ export class StatusbarUi {
     const keys = Object.keys(object);
     const values = Object.values(object);
     return new Function(...keys, `return \`${format}\`;`)(...values);
+  };
+
+  showHide = async (details?: DataSizeCount) => {
+    const result = await vscode.window.showQuickPick(
+      [
+        {
+          label: 'File Size',
+          picked: Settings.visibility.fileSize,
+          description: `Show File Size in StatusBar.`,
+          detail: details?.fileSize,
+          alwaysShow: true,
+        },
+        {
+          label: 'Lines Count & Words Count',
+          picked: Settings.visibility.selection,
+          description: `Show Lines Count & Words Count in StatusBar.`,
+          detail: details ? `${details.linesCount || 0}:${details.wordsCount || 0}` : '',
+          alwaysShow: true,
+        },
+        {
+          label: 'Data Count',
+          picked: Settings.visibility.data,
+          description: `Show Data Count in StatusBar.`,
+          detail: details?.dataCount ? `${details.dataCountDescription}: ${details.dataCount}` : '',
+          alwaysShow: true,
+        },
+      ],
+      {
+        canPickMany: true,
+        placeHolder: 'Please select to Show in Statusbar',
+      }
+    );
+
+    if (result?.length) {
+      const visibility = {
+        fileSize: result.some((r) => r.label === 'File Size'),
+        selection: result.some((r) => r.label === 'Lines Count & Words Count'),
+        data: result.some((r) => r.label === 'Data Count'),
+      };
+      Settings.visibility = visibility;
+    }
   };
 }

@@ -1,3 +1,8 @@
+## v0.0.15
+
+- added `Data Size Count: Show Details` Command - Shows VSCode Information box with details
+- added `Data Size Count: Show / Hide Count StatusBar` Command - Shows a quickPick to Show / Hide the StatusBar details.
+
 ## v0.0.14
 
 - Code Optimized.

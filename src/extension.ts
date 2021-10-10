@@ -1,5 +1,5 @@
 import * as vscode from 'vscode';
-import { SHOW_DETAILS } from './enum';
+import { SHOW_DETAILS, SHOW_HIDE_STATUSBAR } from './enum';
 import { StatusbarUi } from './StatusBarUI';
 
 export function activate(context: vscode.ExtensionContext) {
@@ -7,6 +7,9 @@ export function activate(context: vscode.ExtensionContext) {
 
   // Show Details
   context.subscriptions.push(vscode.commands.registerCommand(SHOW_DETAILS, statusbarUi.showInformation));
+
+  // Show Hide Details
+  context.subscriptions.push(vscode.commands.registerCommand(SHOW_HIDE_STATUSBAR, statusbarUi.showHide));
 
   // Show status bar Item
   context.subscriptions.push(StatusbarUi.statusBarItem);
