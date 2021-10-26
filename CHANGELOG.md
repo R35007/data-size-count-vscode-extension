@@ -1,3 +1,7 @@
+## v0.0.16
+
+- Bug Fixes
+
 ## v0.0.15
 
 - added `Data Size Count: Show Details` Command - Shows VSCode Information box with details

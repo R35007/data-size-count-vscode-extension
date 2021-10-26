@@ -60,12 +60,14 @@ export class StatusbarUi {
   updateStatusBarItem = () => {
     try {
       let detailsFormat = [];
-      const details = new DataSizeCount(vscode.window.activeTextEditor);
 
-      if (!details.editor) {
+      const activeTextEditor = vscode?.window?.activeTextEditor;
+
+      if (activeTextEditor) {
         return StatusbarUi.statusBarItem.hide();
       }
 
+      const details = new DataSizeCount(activeTextEditor);
       StatusbarUi.statusBarItem.show();
 
       if (details.fileSize) {

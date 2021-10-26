@@ -43,18 +43,10 @@ export class DataSizeCount {
   // Function to return all selected Texts and other editor details
   getEditorProps(editor: vscode.TextEditor): EditorProps {
     const document = editor.document;
-    const selection = editor.selection;
     const selections = editor.selections;
-
-    const filePath = document.uri.fsPath;
-
-    const firstLine = document.lineAt(0);
-    const lastLine = document.lineAt(document.lineCount - 1);
-    const textRange = new vscode.Range(firstLine.range.start, lastLine.range.end);
-
-    const editorText = document.getText(textRange);
+    const filePath = document?.uri?.fsPath;
     const selectedText = selections.map((s) => editor.document.getText(s)).join(' ');
-    return { editor, document, selection, selections, filePath, textRange, editorText, selectedText };
+    return { selections, selectedText, filePath };
   }
 
   getFileSize = (filePath: string): string => {
@@ -128,6 +120,7 @@ export class DataSizeCount {
 
   // Returns number of selected words
   getWordsCount = (selectedText: string = ''): number => {
+    if (!selectedText?.trim()) return 0;
     selectedText = selectedText.replace(/(^\s*)|(\s*$)/gi, ''); // removes leading and trailing spaces including enter spaces
     selectedText = selectedText.replace(/[^a-zA-Z ]/g, ' '); // replace all non characters symbols by a single space. ex: data-size-count -> data size count
     selectedText = selectedText.replace(/[ ]{2,}/gi, ' '); // replace more than 2 or more spaces with a single space.
@@ -145,7 +138,7 @@ export class DataSizeCount {
   convertBytes = (bytes: number): string => {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
     if (bytes == 0) {
-      return 'n/a';
+      return '';
     }
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
     if (i == 0) {
@@ -239,14 +232,9 @@ export class DataSizeCount {
 }
 
 interface EditorProps {
-  editor: vscode.TextEditor;
-  document: vscode.TextDocument;
-  selection: vscode.Selection;
+  selectedText: string;
   selections: vscode.Selection[];
   filePath: string;
-  textRange: vscode.Range;
-  editorText: string;
-  selectedText: string;
 }
 
 interface DataDetails {
