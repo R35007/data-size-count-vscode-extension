@@ -1,3 +1,7 @@
+## v0.0.17
+
+- Statusbar details is hidden always bug is fixed.
+
 ## v0.0.16
 
 - Bug Fixes

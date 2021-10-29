@@ -63,7 +63,7 @@ export class StatusbarUi {
 
       const activeTextEditor = vscode?.window?.activeTextEditor;
 
-      if (activeTextEditor) {
+      if (!activeTextEditor) {
         return StatusbarUi.statusBarItem.hide();
       }
 
