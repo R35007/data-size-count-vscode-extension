@@ -6,25 +6,32 @@ const jsdom = require('jsdom');
 
 export class DataSizeCount {
   editor?: vscode.TextEditor;
-  fileSize;
-  linesCount;
-  wordsCount;
-  dataCountWithBrackets;
-  dataCountDescription;
-  dataCount;
-  dataType: 'Array' | 'Object' | 'HTML' | 'Other' = 'Other';
+  currentFile?: string;
+  fileSize?;
+  linesCount?;
+  wordsCount?;
+  dataDetails: DataDetails = {
+    openBracket: '',
+    closeBracket: '',
+    dataCountWithBrackets: '',
+    dataCountDescription: '',
+    dataCount: 0,
+    dataType: 'Other'
+  };
 
-  constructor(editor?: vscode.TextEditor) {
-    if (!editor) return;
+  constructor(args?: any) {
+
+    const { editor, filePath, selectedText, selections } = this.getEditorProps(args);
 
     this.editor = editor;
-    const { selectedText, selections, filePath } = this.getEditorProps(this.editor);
+    this.currentFile = filePath;
 
-    if (Settings.visibility.fileSize) {
+    if (filePath && Settings.visibility.fileSize) {
       this.fileSize = this.getFileSize(filePath);
     }
 
-    if (!selectedText?.trim()) return;
+    if (!editor || !filePath || !selectedText?.trim()) return;
+    
 
     if (Settings.visibility.selection) {
       this.linesCount = this.getLinesCount(selections);
@@ -32,21 +39,19 @@ export class DataSizeCount {
     }
 
     if (Settings.visibility.data) {
-      const { dataType, dataCount, dataCountWithBrackets, dataCountDescription } = this.getDataDetails(selectedText);
-      this.dataType = dataType;
-      this.dataCount = dataCount;
-      this.dataCountWithBrackets = dataCountWithBrackets;
-      this.dataCountDescription = dataCountDescription;
+      const dataDetails = this.getDataDetails(selectedText);
+      this.dataDetails = dataDetails;
     }
   }
 
   // Function to return all selected Texts and other editor details
-  getEditorProps(editor: vscode.TextEditor): EditorProps {
-    const document = editor.document;
-    const selections = editor.selections;
-    const filePath = document?.uri?.fsPath;
-    const selectedText = selections.map((s) => editor.document.getText(s)).join(' ');
-    return { selections, selectedText, filePath };
+  getEditorProps(args?: any) {
+    const editor = vscode.window.activeTextEditor;
+    const document = editor?.document;
+    const selections = editor?.selections;
+    const filePath = args?.fsPath || document?.uri?.fsPath;
+    const selectedText = selections?.map((s) => document?.getText(s)).join(' ');
+    return { editor, filePath, selections, selectedText };
   }
 
   getFileSize = (filePath: string): string => {
@@ -61,6 +66,8 @@ export class DataSizeCount {
     const dataDetails: DataDetails = {
       dataCountDescription: '',
       dataCountWithBrackets: '',
+      openBracket: '',
+      closeBracket: '',
       dataCount: 0,
       dataType: 'Other',
     };
@@ -73,6 +80,8 @@ export class DataSizeCount {
 
       dataDetails.dataType = 'HTML';
       dataDetails.dataCount = elementCount;
+      dataDetails.openBracket = '<';
+      dataDetails.closeBracket = '>';
       dataDetails.dataCountWithBrackets = `<${elementCount}>`;
       dataDetails.dataCountDescription = node.length > 1 ? 'Element(s)' : 'Child Element(s)';
     } else if (json) {
@@ -81,6 +90,8 @@ export class DataSizeCount {
 
         dataDetails.dataType = 'Array';
         dataDetails.dataCount = length;
+        dataDetails.openBracket = '[';
+        dataDetails.closeBracket = ']';
         dataDetails.dataCountWithBrackets = `[${length}]`;
         dataDetails.dataCountDescription = `Array Length`;
       } else if (typeof json === 'object' && !Array.isArray(json)) {
@@ -88,6 +99,8 @@ export class DataSizeCount {
 
         dataDetails.dataType = 'Object';
         dataDetails.dataCount = size;
+        dataDetails.openBracket = '{';
+        dataDetails.closeBracket = '}';
         dataDetails.dataCountWithBrackets = `{${size}}`;
         dataDetails.dataCountDescription = `Object Size`;
       }
@@ -124,7 +137,7 @@ export class DataSizeCount {
     selectedText = selectedText.replace(/(^\s*)|(\s*$)/gi, ''); // removes leading and trailing spaces including enter spaces
     selectedText = selectedText.replace(/[^a-zA-Z ]/g, ' '); // replace all non characters symbols by a single space. ex: data-size-count -> data size count
     selectedText = selectedText.replace(/[ ]{2,}/gi, ' '); // replace more than 2 or more spaces with a single space.
-    selectedText = selectedText.replace(/\n /, '\n'); // replace enter space charecter with next line
+    selectedText = selectedText.replace(/\n /, '\n'); // replace enter space character with next line
 
     let selectedTextChunk = selectedText.split(' '); // split by single space
     selectedTextChunk = selectedTextChunk.map((s: string) => (s ? s.trim() : s)); // trim each word
@@ -137,11 +150,11 @@ export class DataSizeCount {
   // Converts the file size from Bytes to KB | MB | GB | TB
   convertBytes = (bytes: number): string => {
     const sizes = ['Bytes', 'KB', 'MB', 'GB', 'TB'];
-    if (bytes == 0) {
+    if (bytes === 0) {
       return '';
     }
     const i = Math.floor(Math.log(bytes) / Math.log(1024));
-    if (i == 0) {
+    if (i === 0) {
       return bytes + ' ' + sizes[i];
     }
     return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
@@ -193,13 +206,12 @@ export class DataSizeCount {
   tagEscape(selectedText: string): string {
     const escapedString = selectedText
       .trim()
-      .replace(/\n/gi, '') // removes Enter Charecter
+      .replace(/\n/gi, '') // removes Enter Character
       .replace(/\s/gi, ''); // removes spaces
     return escapedString;
   }
 
-  // TODO: Optimize the code
-  // removes Special charaters that are not a JSON compatible
+  // removes Special characters that are not a JSON compatible
   removeSpecialChars(selectedText: string): string {
     const escapedString = selectedText
       .replace(/(\,\])/g, ']') // replaces ,] -> ]
@@ -208,8 +220,7 @@ export class DataSizeCount {
       .replace(/(\<.*?\>)/gi, 'tag') // replace <...> -> tag
       .replace(/(\$\{.*?\})/gi, 'text') // replace ${...} to text
 
-      // TODO: Optimize this pattern
-      // removes all special charactors except {[:,'"]}
+      // removes all special characters except {[:,'"]}
       // removes ~!@#$%^&*()_+-=();/|<>.?
       .replace(/(\~|\!|\@|\#|\$|\%|\^|\&|\*|\_|\+|\-|\=|\(|\)|\;|\/|\|\<|\>|\.|\||\?)/g, '')
 
@@ -231,14 +242,10 @@ export class DataSizeCount {
   }
 }
 
-interface EditorProps {
-  selectedText: string;
-  selections: vscode.Selection[];
-  filePath: string;
-}
-
 interface DataDetails {
   dataCount: number;
+  openBracket: string;
+  closeBracket: string;
   dataCountWithBrackets: string;
   dataCountDescription: string;
   dataType: 'Array' | 'Object' | 'HTML' | 'Other';

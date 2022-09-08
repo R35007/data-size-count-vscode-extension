@@ -1,3 +1,10 @@
+## v0.0.18
+
+- added - editor context menu `Show File Details` - Helps to show file size larger than 5mb.
+- added - `${openBracket}` and `${closeBracket}` variables. WHich gives us the current selected data type brackets.
+- Support for Larger Files. The File details may not show in statusbar if the file size is larger than 5mb.</br>
+  We can now right click on the file and select `Show File Details` to get the File Details which will now show the file size even if the file is larger than 5mb.</br> The selection and data count will still not show if the file size exceeds the limit of 5mb.
+
 ## v0.0.17
 
 - Statusbar details is hidden always bug is fixed.

@@ -1,6 +1,6 @@
 import * as vscode from 'vscode';
 import { DataSizeCount } from './DataSizeCount';
-import { SHOW_DETAILS } from './enum';
+import { Commands } from './enum';
 import { Settings } from './Settings';
 
 export class StatusbarUi {
@@ -13,7 +13,7 @@ export class StatusbarUi {
         Settings.priority
       );
       StatusbarUi.statusBarItem.tooltip = 'Show Details';
-      StatusbarUi.statusBarItem.command = SHOW_DETAILS;
+      StatusbarUi.statusBarItem.command = Commands.SHOW_FILE_DETAILS;
     }
     return StatusbarUi._statusBarItem;
   }
@@ -22,72 +22,64 @@ export class StatusbarUi {
     StatusbarUi._statusBarItem = val;
   }
 
-  showInformation = () => {
-    try {
-      let detailsFormat: string[] = [];
-      const details = new DataSizeCount(vscode.window.activeTextEditor);
+  details!: DataSizeCount;
 
-      if (!details.editor) {
-        return StatusbarUi.statusBarItem.hide();
-      }
-
+  showInformation = (args?: any) => {
+    if(!this.details.currentFile && args?.fsPath){
+      const details = new DataSizeCount(args);
+      this.details = details;
       StatusbarUi.statusBarItem.show();
-
-      if (details.fileSize) {
-        const fileSizeStr = this.interpolate(details, 'File Size: ${fileSize}');
-        detailsFormat.push(fileSizeStr);
-      }
-
-      if (details.linesCount) {
-        const countsStr = this.interpolate(details, ', Line(s): ${linesCount}, Word(s):${wordsCount}');
-        detailsFormat.push(countsStr);
-      }
-
-      if (details.dataCount) {
-        const countsStr = this.interpolate(details, `, ${details.dataCountDescription}: ${details.dataCount}`);
-        detailsFormat.push(countsStr);
-      }
-
-      const actionTxt = 'Show / Hide';
-      vscode.window.showInformationMessage(detailsFormat.join(''), actionTxt).then((choice) => {
-        choice && choice === actionTxt && this.showHide(details);
-      });
-    } catch (err) {
-      console.log(err);
     }
+
+    if (!this.details.currentFile){
+      vscode.window.showErrorMessage(`Invalid file or file size may be larger than 5mb.\n
+      Please right on click the file and select Show File Details to get File Details.`);
+      return StatusbarUi.statusBarItem.hide();
+    }
+
+    const { detailsStatusBarFormat = [], detailsPopupFormat = [] } = this.getDetailsFormat(this.details);
+    StatusbarUi.statusBarItem.text = detailsStatusBarFormat.join('');
+
+    const actionTxt = 'Show / Hide';
+    vscode.window.showInformationMessage(detailsPopupFormat.join(''), actionTxt).then((choice) => {
+      choice && choice === actionTxt && this.showHide(this.details);
+    });
   };
 
-  updateStatusBarItem = () => {
+  updateStatusBarItem = (args?: any) => {
+    const details = new DataSizeCount(args);
+    this.details = details;
+    if (!details.currentFile) return StatusbarUi.statusBarItem.hide();
+    StatusbarUi.statusBarItem.show();
+
+    const { detailsStatusBarFormat = [], detailsPopupFormat = [] } = this.getDetailsFormat(details);
+    StatusbarUi.statusBarItem.text = detailsStatusBarFormat.join('');
+  };
+
+  getDetailsFormat = (details: DataSizeCount) => {
     try {
-      let detailsFormat = [];
-
-      const activeTextEditor = vscode?.window?.activeTextEditor;
-
-      if (!activeTextEditor) {
-        return StatusbarUi.statusBarItem.hide();
-      }
-
-      const details = new DataSizeCount(activeTextEditor);
-      StatusbarUi.statusBarItem.show();
+      let detailsStatusBarFormat = [];
+      let detailsPopupFormat: string[] = [];
 
       if (details.fileSize) {
-        const fileSizeStr = this.interpolate(details, Settings.fileSizeFormat);
-        detailsFormat.push(fileSizeStr);
+        detailsStatusBarFormat.push(this.interpolate(details, Settings.fileSizeFormat));
+        detailsPopupFormat.push(this.interpolate(details, 'File Size: ${fileSize}'));
       }
 
       if (details.linesCount) {
-        const countsStr = this.interpolate(details, Settings.selectionCountFormat);
-        detailsFormat.push(countsStr);
+        detailsStatusBarFormat.push(this.interpolate(details, Settings.selectionCountFormat));
+        detailsPopupFormat.push(this.interpolate(details, ', Line(s): ${linesCount}, Word(s):${wordsCount}'));
       }
 
-      if (details.dataCount) {
-        const countsStr = this.interpolate(details, Settings.dataCountFormat);
-        detailsFormat.push(countsStr);
+      if (details.dataDetails.dataCount) {
+        detailsStatusBarFormat.push(this.interpolate(details.dataDetails, Settings.dataCountFormat));
+        detailsPopupFormat.push(this.interpolate(details.dataDetails, `, ${details.dataDetails.dataCountDescription}: ${details.dataDetails.dataCount}`));
       }
 
-      StatusbarUi.statusBarItem.text = detailsFormat.join('');
+      return { detailsStatusBarFormat, detailsPopupFormat };
     } catch (err) {
-      console.log(err);
+      console.error(err);
+      return {};
     }
   };
 
@@ -120,7 +112,7 @@ export class StatusbarUi {
           label: 'Data Count',
           picked: Settings.visibility.data,
           description: `Show Data Count in StatusBar.`,
-          detail: details?.dataCount ? `${details.dataCountDescription}: ${details.dataCount}` : '',
+          detail: details?.dataDetails.dataCount ? `${details.dataDetails.dataCountDescription}: ${details.dataDetails.dataCount}` : '',
           alwaysShow: true,
         },
       ],

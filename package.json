@@ -2,7 +2,7 @@
   "name": "data-size-count",
   "displayName": "Data Size Count",
   "description": "Shows : File Size, Lines count, Words count, Array Length, Object size, HTML or XML Tags Count in Statusbar",
-  "version": "0.0.17",
+  "version": "0.0.18",
   "icon": "images/data-size-count-logo.png",
   "publisher": "Thinker",
   "license": "MIT",
@@ -42,14 +42,16 @@
     "Other"
   ],
   "activationEvents": [
-    "*"
+    "onCommand:data-size-count.showFileDetails",
+    "onCommand:data-size-count.showHideStatusBar",
+    "onStartupFinished"
   ],
   "contributes": {
     "commands": [
       {
-        "command": "data-size-count.showDetails",
+        "command": "data-size-count.showFileDetails",
         "category": "Data Size Count",
-        "title": "Show Details"
+        "title": "Show File Details"
       },
       {
         "command": "data-size-count.showHideStatusBar",
@@ -91,7 +93,7 @@
           "type": "string",
           "required": true,
           "default": " : ${dataCountWithBrackets}",
-          "description": "You can use these variables to custom display format: ${dataCount} ${dataCountWithBrackets}"
+          "description": "You can use these variables to custom display format: ${dataCount} ${dataCountWithBrackets} ${openBracket} ${closeBracket}"
         },
         "data-size-count.statusBar.visibility": {
           "type": "object",
@@ -124,6 +126,14 @@
           "description": "Show/Hide File Size or Selection Count or Data Count details in statusbar"
         }
       }
+    },
+    "menus": {
+      "editor/context": [
+        {
+          "command": "data-size-count.showFileDetails",
+          "group": "navigation"
+        }
+      ]
     }
   },
   "main": "./out/extension.js",

@@ -19,6 +19,10 @@ Display following details in the vscode statusbar
 <img height="30" src="./images/ScreenShot_4.png">
 <img height="30" src="./images/ScreenShot_5.png">
 
+> Note: The statusbar item may not show if the file size exceed the limit of 5mb.
+> If the file size is larger than 5mb then we cant able to see lines count, words count and data size. But still we can see the File size by right clicking on the editor and select `Show File Details` on the context menu.
+> This will give us the file size even if the file exceeds the limit of 5mb.
+
 ## Display Format
 
 You can use $(icon-name) to show icon, visit this site [https://microsoft.github.io/vscode-codicons/dist/codicon.html](https://microsoft.github.io/vscode-codicons/dist/codicon.html) to find icon name.
@@ -36,6 +40,8 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 - `${wordsCount}` - Gives the selected word(s) count.
 - `${dataCount}` - Gives the selected data count. It can be either Array length or an Object size or HTML Elements count.
 - `${dataCountWithBrackets}` - Gives the selected data count with brackets. ex : `[12]` - Array or `{12}` - Object or `<12>` - HTML.
+- `${openBracket}` - Gives the selected data type open brackets. ex : `[` - Array or `{` - Object or `<` - HTML.
+- `${closeBracket}` - Gives the selected data type close brackets. ex : `]` - Array or `}` - Object or `>` - HTML.
 
 ## Settings
 

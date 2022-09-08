@@ -1,2 +1,5 @@
-export const SHOW_DETAILS = 'data-size-count.showDetails';
-export const SHOW_HIDE_STATUSBAR = 'data-size-count.showHideStatusBar';
+/* eslint-disable @typescript-eslint/naming-convention */
+export enum Commands {
+  SHOW_FILE_DETAILS = 'data-size-count.showFileDetails',
+  SHOW_HIDE_STATUSBAR = 'data-size-count.showHideStatusBar',
+}
