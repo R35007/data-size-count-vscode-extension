@@ -1,3 +1,7 @@
+## v0.0.19
+
+- fixed - words count not considering the word with two letters.
+
 ## v0.0.18
 
 - added - editor context menu `Show File Details` - Helps to show file size larger than 5mb.

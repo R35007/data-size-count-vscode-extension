@@ -141,7 +141,7 @@ export class DataSizeCount {
 
     let selectedTextChunk = selectedText.split(' '); // split by single space
     selectedTextChunk = selectedTextChunk.map((s: string) => (s ? s.trim() : s)); // trim each word
-    selectedTextChunk = selectedTextChunk.filter(String).filter((s: string) => s && s.length >= 3); // filter text which are only string and has minimum 3 characters
+    selectedTextChunk = selectedTextChunk.filter(String).filter((s: string) => s && s.length >= 2); // filter text which are only string and has minimum 3 characters
 
     const wordsCount = selectedTextChunk.length;
     return wordsCount;
