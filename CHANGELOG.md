@@ -1,3 +1,7 @@
+## v1.0.0
+
+- Stable Version release.
+
 ## v0.0.19
 
 - fixed - words count not considering the word with two letters.

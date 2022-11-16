@@ -19,9 +19,7 @@ Display following details in the vscode statusbar
 <img height="30" src="./images/ScreenShot_4.png">
 <img height="30" src="./images/ScreenShot_5.png">
 
-> Note: The statusbar item may not show if the file size exceed the limit of 5mb.
-> If the file size is larger than 5mb then we cant able to see lines count, words count and data size. But still we can see the File size by right clicking on the editor and select `Show File Details` on the context menu.
-> This will give us the file size even if the file exceeds the limit of 5mb.
+> Note: The statusbar item may not show if the file size exceed the limit of 20mb.
 
 ## Display Format
 

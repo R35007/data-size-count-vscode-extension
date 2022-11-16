@@ -2,7 +2,7 @@
   "name": "data-size-count",
   "displayName": "Data Size Count",
   "description": "Shows : File Size, Lines count, Words count, Array Length, Object size, HTML or XML Tags Count in Statusbar",
-  "version": "0.0.19",
+  "version": "1.0.0",
   "icon": "images/data-size-count-logo.png",
   "publisher": "Thinker",
   "license": "MIT",
@@ -62,7 +62,29 @@
     "configuration": {
       "title": "Data Size Count",
       "properties": {
+        "data-size-count.statusBar.fileSizeFormat": {
+          "order": 1,
+          "type": "string",
+          "required": true,
+          "default": "$(file-text) ${fileSize}",
+          "description": "You can use these variables to custom display format: ${fileSize}"
+        },
+        "data-size-count.statusBar.selectionCountFormat": {
+          "order": 2,
+          "type": "string",
+          "required": true,
+          "default": "  ${linesCount} : ${wordsCount}",
+          "description": "You can use these variables to custom display format: ${linesCount} ${wordsCount}"
+        },
+        "data-size-count.statusBar.dataCountFormat": {
+          "order": 3,
+          "type": "string",
+          "required": true,
+          "default": " : ${dataCountWithBrackets}",
+          "description": "You can use these variables to custom display format: ${dataCount} ${dataCountWithBrackets} ${openBracket} ${closeBracket}"
+        },
         "data-size-count.statusBar.position": {
+          "order": 4,
           "type": "string",
           "default": "Left",
           "enum": [
@@ -72,30 +94,14 @@
           "description": "Set Custom Statusbar position"
         },
         "data-size-count.statusBar.priority": {
+          "order": 5,
           "type": "number",
           "default": -1,
           "required": true,
           "description": "The priority of the statusbar. Higher value means the statusbar should be shown more to the left"
         },
-        "data-size-count.statusBar.fileSizeFormat": {
-          "type": "string",
-          "required": true,
-          "default": "$(file-text) ${fileSize}",
-          "description": "You can use these variables to custom display format: ${fileSize}"
-        },
-        "data-size-count.statusBar.selectionCountFormat": {
-          "type": "string",
-          "required": true,
-          "default": "  ${linesCount} : ${wordsCount}",
-          "description": "You can use these variables to custom display format: ${linesCount} ${wordsCount}"
-        },
-        "data-size-count.statusBar.dataCountFormat": {
-          "type": "string",
-          "required": true,
-          "default": " : ${dataCountWithBrackets}",
-          "description": "You can use these variables to custom display format: ${dataCount} ${dataCountWithBrackets} ${openBracket} ${closeBracket}"
-        },
         "data-size-count.statusBar.visibility": {
+          "order": 6,
           "type": "object",
           "default": {
             "fileSize": true,
@@ -126,14 +132,6 @@
           "description": "Show/Hide File Size or Selection Count or Data Count details in statusbar"
         }
       }
-    },
-    "menus": {
-      "editor/context": [
-        {
-          "command": "data-size-count.showFileDetails",
-          "group": "navigation"
-        }
-      ]
     }
   },
   "main": "./out/extension.js",
