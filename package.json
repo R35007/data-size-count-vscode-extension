@@ -2,7 +2,7 @@
   "name": "data-size-count",
   "displayName": "Data Size Count",
   "description": "Shows : File Size, Lines count, Words count, Array Length, Object size, HTML or XML Tags Count in Statusbar",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "icon": "images/data-size-count-logo.png",
   "publisher": "Thinker",
   "license": "MIT",

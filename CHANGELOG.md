@@ -1,3 +1,6 @@
+## v1.1.0
+
+- Reduced bundle size.
 ## v1.0.0
 
 - Stable Version release.

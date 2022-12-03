@@ -13,11 +13,11 @@ Display following details in the vscode statusbar
 
 ## Screenshots
 
-<img height="30" src="./images/ScreenShot_1.png">
-<img height="30" src="./images/ScreenShot_2.png">
-<img height="30" src="./images/ScreenShot_3.png">
-<img height="30" src="./images/ScreenShot_4.png">
-<img height="30" src="./images/ScreenShot_5.png">
+<img height="30" src="https://user-images.githubusercontent.com/23217228/205437226-dc753331-d2e4-47a6-a2eb-356da600b52d.png" alt="screenshot-1">
+<img height="30" src="https://user-images.githubusercontent.com/23217228/205437260-c61d8df3-919c-410a-a431-1aa6cbda1b46.png" alt="screenshot-2">
+<img height="30" src="https://user-images.githubusercontent.com/23217228/205437279-4230192c-2ef5-484e-9251-03f1dd3720b2.png" alt="screenshot-3">
+<img height="30" src="https://user-images.githubusercontent.com/23217228/205437296-3a0161c8-c21b-4534-8e06-5dcc2ed35493.png" alt="screenshot-4">
+<img height="30" src="https://user-images.githubusercontent.com/23217228/205437318-df8f9ecc-7b72-4773-bf8d-ec50d6e80ecd.png" alt="screenshot-5">
 
 > Note: The statusbar item may not show if the file size exceed the limit of 20mb.
 
@@ -52,4 +52,4 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 
 ## Preview
 
-<img width="600" src="./images/preview.gif">
+<img width="600" src="https://user-images.githubusercontent.com/23217228/205437199-a879dc6e-32b6-46b9-abc2-ec20dd33c4f1.gif">
