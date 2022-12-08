@@ -1,6 +1,7 @@
-## v1.1.0
+## v1.1.1
 
-- Reduced bundle size.
+- Build size reduced using webpack.
+  
 ## v1.0.0
 
 - Stable Version release.

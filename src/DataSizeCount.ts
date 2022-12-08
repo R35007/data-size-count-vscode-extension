@@ -34,7 +34,7 @@ export class DataSizeCount {
     
 
     if (Settings.visibility.selection) {
-      this.linesCount = this.getLinesCount(selections);
+      this.linesCount = this.getLinesCount(selections as vscode.Selection[]);
       this.wordsCount = this.getWordsCount(selectedText);
     }
 

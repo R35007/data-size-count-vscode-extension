@@ -2,7 +2,7 @@
   "name": "data-size-count",
   "displayName": "Data Size Count",
   "description": "Shows : File Size, Lines count, Words count, Array Length, Object size, HTML or XML Tags Count in Statusbar",
-  "version": "1.1.0",
+  "version": "1.1.1",
   "icon": "images/data-size-count-logo.png",
   "publisher": "Thinker",
   "license": "MIT",
@@ -134,22 +134,25 @@
       }
     }
   },
-  "main": "./out/extension.js",
-  "scripts": {
-    "vscode:prepublish": "npm run compile",
-    "compile": "tsc -p ./",
-    "lint": "eslint src --ext ts",
-    "watch": "tsc -watch -p ./",
-    "pretest": "npm run compile && npm run lint"
-  },
-  "devDependencies": {
-    "@types/vscode": "^1.30.0",
-    "@types/node": "^12.11.7",
-    "eslint": "^7.9.0",
-    "@typescript-eslint/eslint-plugin": "^4.1.1",
-    "@typescript-eslint/parser": "^4.1.1",
-    "typescript": "^4.0.2"
-  },
+  "main": "./dist/extension.js",
+	"scripts": {
+		"vscode:prepublish": "npm run package",
+		"compile": "webpack",
+		"watch": "webpack --watch",
+		"package": "webpack --mode production --devtool hidden-source-map",
+		"lint": "eslint src --ext ts"
+	},
+	"devDependencies": {
+		"@types/vscode": "^1.74.0",
+		"@types/node": "14.x",
+		"@typescript-eslint/eslint-plugin": "^5.16.0",
+		"@typescript-eslint/parser": "^5.16.0",
+		"eslint": "^8.11.0",
+		"typescript": "^4.5.5",
+		"ts-loader": "^9.2.8",
+		"webpack": "^5.70.0",
+		"webpack-cli": "^4.9.2"
+	},
   "dependencies": {
     "durable-json-lint": "0.0.3",
     "jsdom": "^17.0.0"

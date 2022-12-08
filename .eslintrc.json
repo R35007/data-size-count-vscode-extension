@@ -9,11 +9,15 @@
         "@typescript-eslint"
     ],
     "rules": {
-        "curly": ["error", "multi-line", "consistent"],
         "@typescript-eslint/naming-convention": "warn",
         "@typescript-eslint/semi": "warn",
         "eqeqeq": "warn",
         "no-throw-literal": "warn",
         "semi": "off"
-    }
+    },
+    "ignorePatterns": [
+        "out",
+        "dist",
+        "**/*.d.ts"
+    ]
 }
