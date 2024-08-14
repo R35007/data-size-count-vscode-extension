@@ -1,5 +1,11 @@
 # Data Size Count
 
+Shows: File Size, Lines count, Words count, Array Length, Object size, HTML or XML Tags Count in Statusbar
+
+<a href="https://buymeacoffee.com/r35007" target="_blank">
+  <img src="https://r35007.github.io/Siva_Profile/images//buymeacoffee.png" />
+</a>
+
 ## Features
 
 Display following details in the vscode statusbar
@@ -20,6 +26,11 @@ Display following details in the vscode statusbar
 <img height="30" src="https://user-images.githubusercontent.com/23217228/205437318-df8f9ecc-7b72-4773-bf8d-ec50d6e80ecd.png" alt="screenshot-5">
 
 > Note: The statusbar item may not show if the file size exceed the limit of 20mb.
+
+## Preview
+
+<img src="https://user-images.githubusercontent.com/23217228/205437199-a879dc6e-32b6-46b9-abc2-ec20dd33c4f1.gif">
+
 
 ## Display Format
 
@@ -49,7 +60,3 @@ You can use $(icon-name) to show icon, visit this site [https://microsoft.github
 - `data-size-count.statusBar.selectionCountFormat` - You can use these variables to custom display format: \${linesCount} \${wordsCount}.
 - `data-size-count.statusBar.dataCountFormat` - You can use these variables to custom display format: \${dataCountWithBrackets}.
 - `data-size-count.statusBar.visibility` - Show/Hide File Size, Lines Count, Words and Data Count details in statusbar.
-
-## Preview
-
-<img width="600" src="https://user-images.githubusercontent.com/23217228/205437199-a879dc6e-32b6-46b9-abc2-ec20dd33c4f1.gif">

@@ -1,7 +1,8 @@
+import * as jsonc from "comment-json";
 import * as fs from 'fs';
 import * as vscode from 'vscode';
 import { Settings } from './Settings';
-const durableJsonLint = require('durable-json-lint');
+const json5 = require('json5').default
 const jsdom = require('jsdom');
 
 export class DataSizeCount {
@@ -31,7 +32,7 @@ export class DataSizeCount {
     }
 
     if (!editor || !filePath || !selectedText?.trim()) return;
-    
+
 
     if (Settings.visibility.selection) {
       this.linesCount = this.getLinesCount(selections as vscode.Selection[]);
@@ -160,28 +161,31 @@ export class DataSizeCount {
     return (bytes / Math.pow(1024, i)).toFixed(1) + ' ' + sizes[i];
   };
 
-  // Checks if a given string is a valid JSON and returns the JSON data if true.
-  getValidJSON(selectedText: string): Object | any[] | undefined {
-    const escapedText = this.jsonEscape(selectedText);
-    try {
-      const data = JSON.parse(escapedText);
-      return data;
-    } catch (err) {
-      return this.getDurableJSON(escapedText);
-    }
-  }
-
   // Makes the selected Text as a more durable JSON using regex and returns JSON data if true.
-  getDurableJSON(selectedText: string): Object | any[] | undefined {
-    try {
-      const escapedText = this.removeSpecialChars(selectedText);
-      const durableText = durableJsonLint(escapedText);
-      const data = JSON.parse(durableText?.json);
-      return data;
-    } catch (err) {
-      console.log(err);
+  getValidJSON(originalData: string = ''): Object | any[] | undefined {
+    let dataText = originalData.trim();
+
+    // remove , or ; at the end of the string and set it to the delimiter
+    if (dataText.endsWith(";") || dataText.endsWith(",") || dataText.endsWith("\n")) {
+      dataText = dataText.substring(0, dataText.length - 1).trim();
     }
-  }
+
+    try {
+      return JSON.parse(dataText) as object | any[];
+    } catch (err) {
+      try {
+        // If parsing json with comment-json doesn't work the try with json5 parsing
+        return jsonc.parse(dataText) as object | any[];
+      } catch (error: any) {
+        try {
+          // If parsing json with comment-json doesn't work the try with json5 parsing
+          return json5.parse(dataText) as object | any[];
+        } catch (error: any) {
+          console.log(err);
+        }
+      }
+    }
+  };
 
   // TODO: Get Tags even if selected text is a html or body tag
   // For now it returns tags that are selected only under a body tag
@@ -208,36 +212,6 @@ export class DataSizeCount {
       .trim()
       .replace(/\n/gi, '') // removes Enter Character
       .replace(/\s/gi, ''); // removes spaces
-    return escapedString;
-  }
-
-  // removes Special characters that are not a JSON compatible
-  removeSpecialChars(selectedText: string): string {
-    const escapedString = selectedText
-      .replace(/(\,\])/g, ']') // replaces ,] -> ]
-      .replace(/(\,\})/g, '}') // replaces ,} -> }
-      .replace(/(\(.*?\))/gi, 'tag') // replace (...) -> tag
-      .replace(/(\<.*?\>)/gi, 'tag') // replace <...> -> tag
-      .replace(/(\$\{.*?\})/gi, 'text') // replace ${...} to text
-
-      // removes all special characters except {[:,'"]}
-      // removes ~!@#$%^&*()_+-=();/|<>.?
-      .replace(/(\~|\!|\@|\#|\$|\%|\^|\&|\*|\_|\+|\-|\=|\(|\)|\;|\/|\|\<|\>|\.|\||\?)/g, '')
-
-      .replace(/\`/g, "'") // replace back tick with single quote
-      .trim();
-    return this.jsonEscape(escapedString);
-  }
-
-  // removes all Enter, Spaces
-  jsonEscape(selectedText: string): string {
-    const escapedString = selectedText
-      .trim()
-      .replace(/\n/g, '') // removes next line
-      .replace(/\s/g, '') // removes spaces
-      .replace(/\r/g, '') // removes carriage return character.
-      .replace(/\t/g, '') // removes tabs
-      .replace(/(,|;)$/g, ''); // removes , ; at the end of the selected text
     return escapedString;
   }
 }

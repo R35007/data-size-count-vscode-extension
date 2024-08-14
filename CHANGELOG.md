@@ -1,3 +1,7 @@
+## v2.0.0
+
+- added - Now supports json with comments.
+
 ## v1.1.1
 
 - Build size reduced using webpack.
