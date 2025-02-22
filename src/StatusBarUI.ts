@@ -25,13 +25,13 @@ export class StatusbarUi {
   details!: DataSizeCount;
 
   showInformation = (args?: any) => {
-    if(!this.details.currentFile && args?.fsPath){
+    if (!this.details.currentFile && args?.fsPath) {
       const details = new DataSizeCount(args);
       this.details = details;
       StatusbarUi.statusBarItem.show();
     }
 
-    if (!this.details.currentFile){
+    if (!this.details.currentFile) {
       vscode.window.showErrorMessage(`Invalid file or file size may be larger than 5mb.\n
       Please right on click the file and select Show File Details to get File Details.`);
       return StatusbarUi.statusBarItem.hide();
@@ -52,7 +52,7 @@ export class StatusbarUi {
     if (!details.currentFile) return StatusbarUi.statusBarItem.hide();
     StatusbarUi.statusBarItem.show();
 
-    const { detailsStatusBarFormat = [], detailsPopupFormat = [] } = this.getDetailsFormat(details);
+    const { detailsStatusBarFormat = [] } = this.getDetailsFormat(details);
     StatusbarUi.statusBarItem.text = detailsStatusBarFormat.join('');
   };
 
@@ -78,7 +78,7 @@ export class StatusbarUi {
 
       return { detailsStatusBarFormat, detailsPopupFormat };
     } catch (err) {
-      console.error(err);
+      // console.error(err);
       return {};
     }
   };

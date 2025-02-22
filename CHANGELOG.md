@@ -1,3 +1,7 @@
+## v2.0.1
+
+- removed - console logs are removed.
+
 ## v2.0.0
 
 - added - Now supports json with comments.

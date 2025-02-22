@@ -181,7 +181,7 @@ export class DataSizeCount {
           // If parsing json with comment-json doesn't work the try with json5 parsing
           return json5.parse(dataText) as object | any[];
         } catch (error: any) {
-          console.log(err);
+          // console.log(err);
         }
       }
     }
@@ -203,7 +203,7 @@ export class DataSizeCount {
 
       return _virtualDom.children;
     } catch (err) {
-      console.log(err);
+      // console.log(err);
     }
   }
 
