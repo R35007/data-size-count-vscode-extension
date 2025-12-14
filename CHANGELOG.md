@@ -1,3 +1,7 @@
+## v3.0.0
+
+- added - selected size metrics in statusbar
+
 ## v2.0.1
 
 - removed - console logs are removed.
