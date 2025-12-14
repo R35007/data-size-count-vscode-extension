@@ -2,7 +2,7 @@
   "name": "data-size-count",
   "displayName": "Data Size Count",
   "description": "Shows: File Size, Lines count, Words count, Array Length, Object size, HTML or XML Tags Count in Statusbar",
-  "version": "2.0.1",
+  "version": "3.0.0",
   "icon": "images/data-size-count-logo.png",
   "publisher": "Thinker",
   "license": "MIT",
@@ -36,14 +36,12 @@
     "status"
   ],
   "engines": {
-    "vscode": "^1.30.0"
+    "vscode": "^1.75.0"
   },
   "categories": [
     "Other"
   ],
   "activationEvents": [
-    "onCommand:data-size-count.showFileDetails",
-    "onCommand:data-size-count.showHideStatusBar",
     "onStartupFinished"
   ],
   "contributes": {
@@ -52,11 +50,6 @@
         "command": "data-size-count.showFileDetails",
         "category": "Data Size Count",
         "title": "Show File Details"
-      },
-      {
-        "command": "data-size-count.showHideStatusBar",
-        "category": "Data Size Count",
-        "title": "Show / Hide Count StatusBar"
       }
     ],
     "configuration": {
@@ -69,19 +62,26 @@
           "default": "$(file-text) ${fileSize}",
           "description": "You can use these variables to custom display format: ${fileSize}"
         },
+        "data-size-count.statusBar.selectedSizeFormat": {
+          "order": 1,
+          "type": "string",
+          "required": true,
+          "default": "  $(selection) ${selectedSize}",
+          "description": "You can use these variables to custom display format: ${selectedSize}"
+        },
         "data-size-count.statusBar.selectionCountFormat": {
           "order": 2,
           "type": "string",
           "required": true,
-          "default": "  ${linesCount} : ${wordsCount}",
-          "description": "You can use these variables to custom display format: ${linesCount} ${wordsCount}"
+          "default": "  ${linesCount} : ${wordsCount} : ${charCount}",
+          "description": "You can use these variables to custom display format: ${linesCount} ${wordsCount} ${charCount} ${charCountWithoutSpaces}"
         },
         "data-size-count.statusBar.dataCountFormat": {
           "order": 3,
           "type": "string",
           "required": true,
           "default": " : ${dataCountWithBrackets}",
-          "description": "You can use these variables to custom display format: ${dataCount} ${dataCountWithBrackets} ${openBracket} ${closeBracket}"
+          "description": "You can use these variables to custom display format: ${dataType} ${dataCount} ${dataCountWithBrackets} ${openBracket} ${closeBracket}"
         },
         "data-size-count.statusBar.position": {
           "order": 4,
@@ -115,6 +115,12 @@
               "default": true,
               "description": "Set to true to show File Size in Statusbar"
             },
+            "selectedSize": {
+              "title": "Selected Size",
+              "type": "boolean",
+              "default": true,
+              "description": "Set to true to show Selected Size in Statusbar"
+            },
             "selection": {
               "title": "Selection",
               "type": "boolean",
@@ -144,7 +150,7 @@
   },
   "devDependencies": {
     "@types/node": "14.x",
-    "@types/vscode": "^1.30.0",
+    "@types/vscode": "^1.75.0",
     "@typescript-eslint/eslint-plugin": "^5.16.0",
     "@typescript-eslint/parser": "^5.16.0",
     "eslint": "^8.11.0",
