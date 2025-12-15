@@ -2,7 +2,7 @@
   "name": "data-size-count",
   "displayName": "Data Size Count",
   "description": "Shows: File Size, Lines count, Words count, Array Length, Object size, HTML or XML Tags Count in Statusbar",
-  "version": "3.0.0",
+  "version": "4.0.0",
   "icon": "images/data-size-count-logo.png",
   "publisher": "Thinker",
   "license": "MIT",
@@ -47,9 +47,9 @@
   "contributes": {
     "commands": [
       {
-        "command": "data-size-count.showFileDetails",
+        "command": "data-size-count.showCombinedDetails",
         "category": "Data Size Count",
-        "title": "Show File Details"
+        "title": "Show Combined Details"
       }
     ],
     "configuration": {
@@ -63,28 +63,147 @@
           "description": "You can use these variables to custom display format: ${fileSize}"
         },
         "data-size-count.statusBar.selectedSizeFormat": {
-          "order": 1,
-          "type": "string",
-          "required": true,
-          "default": "  $(selection) ${selectedSize}",
-          "description": "You can use these variables to custom display format: ${selectedSize}"
-        },
-        "data-size-count.statusBar.selectionCountFormat": {
           "order": 2,
           "type": "string",
           "required": true,
-          "default": "  ${linesCount} : ${wordsCount} : ${charCount}",
-          "description": "You can use these variables to custom display format: ${linesCount} ${wordsCount} ${charCount} ${charCountWithoutSpaces}"
+          "default": "$(selection) ${selectedSize}",
+          "description": "You can use these variables to custom display format: ${selectedSize}"
         },
-        "data-size-count.statusBar.dataCountFormat": {
+        "data-size-count.statusBar.selectionCountFormat": {
           "order": 3,
           "type": "string",
           "required": true,
-          "default": " : ${dataCountWithBrackets}",
-          "description": "You can use these variables to custom display format: ${dataType} ${dataCount} ${dataCountWithBrackets} ${openBracket} ${closeBracket}"
+          "default": "${linesCount} : ${wordsCount} : ${charCount}",
+          "description": "You can use these variables to custom display format: ${linesCount} ${wordsCount} ${charCount} ${charCountWithoutSpaces} ${duplicateLinesCount} ${emptyLineCount} ${duplicateWordsCount}"
+        },
+        "data-size-count.statusBar.dataCountFormat": {
+          "order": 4,
+          "type": "string",
+          "required": true,
+          "default": "$(database) ${dataCountWithBrackets} / ${maxDepth}",
+          "description": "You can use these variables to custom display format: ${dataType} ${dataCount} ${maxDepth} ${dataCountDesc} ${dataCountWithBrackets} ${openBracket} ${closeBracket}"
+        },
+        "data-size-count.statusBar.regexCount": {
+          "order": 5,
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "order": {
+                "type": "number",
+                "description": "Priority order for applying this regex entry. Lower numbers are shown earlier."
+              },
+              "format": {
+                "type": "string",
+                "description": "Display format for the regex count. Use ${regexCount} to embed the count. Leave empty to ignore this entry."
+              },
+              "onlyOnSelection": {
+                "type": "boolean",
+                "description": "If true, evaluate this regex only when the text selection changes. If false, it is always evaluated on document load or active editor change.",
+                "default": false
+              },
+              "alwaysShow": {
+                "type": "boolean",
+                "description": "If true, the regex entry will be shown even when the match count is zero. If false, entries with zero matches are hidden.",
+                "default": false
+              },
+              "title": {
+                "type": "string",
+                "description": "Human‑readable title for this regex entry."
+              },
+              "description": {
+                "type": "string",
+                "description": "Additional human‑readable description for this regex entry."
+              },
+              "regex": {
+                "type": "string",
+                "description": "Regular expression string to match. Use standard JS RegExp syntax; include flags (e.g. '/pattern/flags') if needed."
+              }
+            },
+            "required": [
+              "format",
+              "regex"
+            ],
+            "additionalProperties": false
+          },
+          "examples": [
+            [
+              {
+                "title": "Imports",
+                "format": "$(cloud-download) ${matchCount} Imports",
+                "regex": "^\\s*import\\b.*$",
+                "onlyOnSelection": false,
+                "alwaysShow": false
+              },
+              {
+                "title": "Exports",
+                "format": "$(cloud-upload) ${matchCount} Exports",
+                "regex": "^\\s*export\\b.*$",
+                "onlyOnSelection": false,
+                "alwaysShow": false
+              },
+              {
+                "title": "Comments",
+                "format": "$(comment) ${matchCount} Comments",
+                "regex": "^\\s*(//.*|#.*|<!--.*-->|/\\*.*\\*/.*)$",
+                "onlyOnSelection": false,
+                "alwaysShow": false
+              },
+              {
+                "title": "Consoles",
+                "format": "$(debug-console) ${matchCount} Console",
+                "regex": "console\\.(log|warn|error)\\s*\\(",
+                "onlyOnSelection": false,
+                "alwaysShow": false
+              },
+              {
+                "title": "TODOs",
+                "format": "$(checklist) TODOs: ${matchCount}",
+                "regex": "^\\s*(//.*TODO.*|#.*TODO.*|<!--.*TODO.*-->|/\\*.*TODO.*\\*/.*)$",
+                "onlyOnSelection": false,
+                "alwaysShow": false
+              }
+            ]
+          ],
+          "default": [
+            {
+              "title": "Imports",
+              "format": "$(cloud-download) ${matchCount} Imports",
+              "regex": "^\\s*import\\b.*$",
+              "onlyOnSelection": false,
+              "alwaysShow": false
+            },
+            {
+              "title": "Consoles",
+              "format": "$(debug-console) ${matchCount} Console",
+              "regex": "console\\.(log|warn|error)\\s*\\(",
+              "onlyOnSelection": false,
+              "alwaysShow": false
+            },
+            {
+              "title": "TODOs",
+              "format": "$(checklist) TODOs: ${matchCount}",
+              "regex": "^\\s*(//.*TODO.*|#.*TODO.*|<!--.*TODO.*-->|/\\*.*TODO.*\\*/.*)$",
+              "onlyOnSelection": false,
+              "alwaysShow": false
+            }
+          ],
+          "description": "Array of regex match count entries for the status bar. Each entry uses ${regexCount} in its format."
+        },
+        "data-size-count.statusBar.selectionMetricsSeparator": {
+          "order": 6,
+          "type": "string",
+          "default": "  |  ",
+          "description": "Separator to use between different selectedSizeFormat, selectionCountFormat and dataCountFormat items"
+        },
+        "data-size-count.statusBar.regexCountSeparator": {
+          "order": 7,
+          "type": "string",
+          "default": ", ",
+          "description": "Separator to use between different regex count format items"
         },
         "data-size-count.statusBar.position": {
-          "order": 4,
+          "order": 8,
           "type": "string",
           "default": "Left",
           "enum": [
@@ -94,48 +213,11 @@
           "description": "Set Custom Statusbar position"
         },
         "data-size-count.statusBar.priority": {
-          "order": 5,
+          "order": 9,
           "type": "number",
           "default": -1,
           "required": true,
           "description": "The priority of the statusbar. Higher value means the statusbar should be shown more to the left"
-        },
-        "data-size-count.statusBar.visibility": {
-          "order": 6,
-          "type": "object",
-          "default": {
-            "fileSize": true,
-            "selection": true,
-            "data": true
-          },
-          "properties": {
-            "fileSize": {
-              "title": "File Size",
-              "type": "boolean",
-              "default": true,
-              "description": "Set to true to show File Size in Statusbar"
-            },
-            "selectedSize": {
-              "title": "Selected Size",
-              "type": "boolean",
-              "default": true,
-              "description": "Set to true to show Selected Size in Statusbar"
-            },
-            "selection": {
-              "title": "Selection",
-              "type": "boolean",
-              "default": true,
-              "description": "Set to true to show Selection Count details in Statusbar"
-            },
-            "data": {
-              "title": "Data",
-              "type": "boolean",
-              "default": true,
-              "description": "Set to true to show Data Count details in Statusbar"
-            }
-          },
-          "additionalProperties": false,
-          "description": "Show/Hide File Size or Selection Count or Data Count details in statusbar"
         }
       }
     }

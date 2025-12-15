@@ -1,6 +1,14 @@
 import * as jsonc from "comment-json";
+import * as vscode from "vscode";
+import { Settings } from "./Settings";
 const json5 = require("json5").default;
 const jsdom = require("jsdom");
+
+export function createItem(id: string, name: string, position = Settings.position, priority = Settings.priority): vscode.StatusBarItem {
+  const item = vscode.window.createStatusBarItem(id, vscode.StatusBarAlignment[position], priority);
+  item.name = name;
+  return item;
+}
 
 // Converts bytes to human-readable format
 function tagEscape(selectedText: string): string {
@@ -87,3 +95,22 @@ export const convertBytes = (bytes: number): string => {
   }
   return (bytes / Math.pow(1024, i)).toFixed(1) + " " + sizes[i];
 };
+
+// Parse a RegExp string which can be in the form '/pattern/flags' or a raw pattern string.
+// Ensures the returned RegExp has the global flag 'g' so matches can be counted.
+export function parseRegExpString(pattern: string): RegExp | null {
+  if (!pattern || !pattern.length) return null;
+  try {
+    const match = pattern.match(new RegExp("^/(.*?)/([gimusy]*)$"));
+    if (match) {
+      const body = match[1];
+      let flags = match[2] || "";
+      if (!flags.includes("g")) flags += "g";
+      return new RegExp(body, flags);
+    }
+    // raw pattern: create with global and case-insensitive by default? preserve no extra flags
+    return new RegExp(pattern, "g");
+  } catch (e) {
+    return null;
+  }
+}

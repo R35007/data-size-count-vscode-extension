@@ -16,67 +16,54 @@ Shows file size, lines count, words count, array length, object size, and HTML/X
 
 ## ✨ Features
 
-### Real-Time File & Selection Metrics
-Display the following details instantly in your VS Code status bar:
+### Core Metrics
 
-- **File Size** - Total size of the active file
-- **Selected Size** - Size of the currently selected text (in bytes)
-- **Lines Count** - Number of lines in the selection
-- **Words Count** - Number of words in the selection
-- **Character Count** - Total characters in the selection
-- **Character Count (No Spaces)** - Character count excluding whitespace
-- **Array Length** - Automatically detects and displays array length for selected JSON arrays
-- **Object Size** - Calculates object properties when selecting JSON objects
-- **HTML/XML Tag Count** - Counts elements when selecting HTML or XML markup
+Display instantly in your VS Code status bar:
 
-### Smart Data Detection
-- **JSON Support** - Intelligently parses and analyzes JSON arrays and objects
-- **Markup Support** - Detects HTML and XML tags and provides element counts
-- **Automatic Updates** - Metrics update instantly as you type or change selections
-- **Multi-Cursor Support** - Correctly handles multiple selections simultaneously
+- **File Size** – Total size of the active file
+- **Selected Size** – Size of selected text in bytes
+- **Lines Count** – Number of selected lines
+- **Words Count** – Number of selected words
+- **Character Count** – Total and whitespace-excluded character counts
+- **Array Length** – Automatic JSON array detection and element count
+- **Object Size** – JSON object property count
+- **HTML/XML Tags** – Element counts for markup
 
-### Customizable Status Bar Display
-- **Flexible Formatting** - Use custom templates with variables to display exactly what you need
-- **Icon Support** - Use VS Code's codicon library for visual indicators
-- **Position Control** - Place the status bar item anywhere you want
-- **Visibility Toggle** - Show/hide different metrics independently
+### Intelligent Features
 
-## 📦 Installation
+- **Real-Time Updates** – Metrics refresh instantly as you type or change selections
+- **Multi-Cursor Support** – Handles multiple selections correctly
+- **JSON Parsing** – Automatically detects and analyzes JSON structures
+- **Markup Detection** – Recognizes HTML and XML content
+- **Custom Formatting** – Use template variables and VS Code icons to design your display
+- **Regex Counting** – Define custom patterns to count imports, exports, comments, and more
 
-### From VS Code Marketplace
-1. Open **VS Code**
-2. Go to **Extensions** (Ctrl+Shift+X / Cmd+Shift+X)
-3. Search for **"Data Size Count"**
-4. Click **Install**
+### Flexible Customization
 
-### Manual Installation
-1. Clone or download this repository
-2. Navigate to the project directory
-3. Run `npm install` to install dependencies
-4. Run `npm run compile` to build the extension
-5. Press `F5` to run the extension in debug mode
+- Define custom display formats with variables and icons
+- Choose status bar position (left/right) and priority
+- Configure separators for metrics
 
-## 🎯 Usage
+## Usage
 
-### Basic Usage
-Once installed, the extension automatically activates and displays metrics in your status bar:
-- Metrics update in real-time as you open files and make selections
-- Click on the status bar item to view detailed information in a popup
-- The status bar intelligently updates based on your current selection
+### Basic Operation
+
+Once installed, the extension works automatically:
+
+1. Open any file in VS Code
+2. Make a selection to see metrics
+3. Click the status bar item to view details in a popup
+4. Customize display format in settings
 
 ### Commands
-The extension provides the following VS Code commands:
 
-| Command | Description |
-|---------|-------------|
-| `data-size-count.showFileDetails` | Display detailed file and selection information |
-| `data-size-count.showHideStatusBar` | Toggle the status bar visibility |
+| Command | Purpose |
+|---------|---------|
+| `data-size-count.showCombinedDetails` | Display detailed statistics popup |
 
-You can access these commands via:
-- **Command Palette** (Ctrl+Shift+P / Cmd+Shift+P) → Search for "Data Size Count"
-- **Status Bar Click** → Click the status bar item to show details
+Access via **Command Palette** (Ctrl+Shift+P / Cmd+Shift+P) or click the status bar item.
 
-## 📸 Screenshots
+### Visual Examples
 
 <div align="center">
   <img height="30" src="https://user-images.githubusercontent.com/23217228/205437226-dc753331-d2e4-47a6-a2eb-356da600b52d.png" alt="File Size Display" />
@@ -89,61 +76,62 @@ You can access these commands via:
 ### Interactive Preview
 <img src="https://user-images.githubusercontent.com/23217228/205437199-a879dc6e-32b6-46b9-abc2-ec20dd33c4f1.gif" alt="Extension Demo" />
 
-## ⚙️ Configuration
+## Configuration
 
-### Settings Overview
+All settings are optional with sensible defaults. Customize the extension to match your workflow.
 
-All settings are optional. The extension provides sensible defaults but can be customized to match your workflow.
+### Display Format Settings
 
-#### Status Bar Position & Priority
+| Setting | Default | Description |
+|---------|---------|-------------|
+| `data-size-count.statusBar.fileSizeFormat` | `"$(file-text) ${fileSize}"` | Format for file size display |
+| `data-size-count.statusBar.selectedSizeFormat` | `"$(selection) ${selectedSize}"` | Format for selected text size |
+| `data-size-count.statusBar.selectionCountFormat` | `"${linesCount} : ${wordsCount} : ${charCount}"` | Format for selection metrics |
+| `data-size-count.statusBar.dataCountFormat` | `"$(database) ${dataCountWithBrackets} / ${maxDepth}"` | Format for data counts |
+
+### Position & Priority
 
 | Setting | Type | Default | Description |
 |---------|------|---------|-------------|
-| `data-size-count.statusBar.position` | string | `"right"` | Position of the status bar item (`"left"` or `"right"`) |
-| `data-size-count.statusBar.priority` | number | `99` | Priority determines position (higher values appear more to the left) |
-| `data-size-count.statusBar.visibility` | object | `{ ... }` | Controls visibility of different metrics |
+| `data-size-count.statusBar.position` | string | `"Left"` | Position (`"Left"` or `"Right"`) |
+| `data-size-count.statusBar.priority` | number | `-1` | Controls position order (higher = more to the left) |
+| `data-size-count.statusBar.selectionMetricsSeparator` | string | `"  |  "` | Separator between selection metrics |
+| `data-size-count.statusBar.regexCountSeparator` | string | `", "` | Separator between regex counts |
 
-#### Display Format Settings
-
-| Setting | Type | Default Value | Description |
-|---------|------|------------------|-------------|
-| `data-size-count.statusBar.fileSizeFormat` | string | `"$(file-text) ${fileSize}"` | Format for displaying file size |
-| `data-size-count.statusBar.selectedSizeFormat` | string | `"${selectedSize}"` | Format for displaying selected text size |
-| `data-size-count.statusBar.selectionCountFormat` | string | `"${linesCount} : ${wordsCount}"` | Format for line and word counts |
-| `data-size-count.statusBar.dataCountFormat` | string | `": ${dataCountWithBrackets}"` | Format for array/object/tag counts |
-
-### Format Variables Reference
+### Format Variables
 
 Use these variables in your custom format strings:
 
 #### File Metrics
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `${fileSize}` | Total size of the active file | `"2.5 MB"` |
+- `${fileSize}` – File size with unit (e.g., "2.5 MB")
 
 #### Selection Metrics
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `${selectedSize}` | Size of selected text in bytes | `"1.2 KB"` |
-| `${linesCount}` | Number of selected lines | `5` |
-| `${wordsCount}` | Number of selected words | `42` |
-| `${charCount}` | Total characters in selection | `234` |
-| `${charCountWithoutSpaces}` | Characters excluding whitespace | `198` |
+- `${selectedSize}` – Size of selection in bytes
+- `${linesCount}` – Number of selected lines
+- `${wordsCount}` – Number of selected words
+- `${charCount}` – Total characters in selection
+- `${charCountWithoutSpaces}` – Characters excluding whitespace
+- `${emptyLineCount}` – Number of empty lines in selection
+- `${duplicateLinesCount}` – Count of duplicate lines
+- `${duplicateWordsCount}` – Count of duplicate words
 
 #### Data Type Metrics
-| Variable | Description | Example |
-|----------|-------------|---------|
-| `${dataCount}` | Count of array elements, object properties, or HTML elements | `12` |
-| `${dataCountWithBrackets}` | Data count with appropriate brackets | `[12]`, `{8}`, `<5>` |
-| `${openBracket}` | Opening bracket for detected data type | `[`, `{`, `<` |
-| `${closeBracket}` | Closing bracket for detected data type | `]`, `}`, `>` |
-| `${dataCountDesc}` | Descriptive label for data type | `"Array"`, `"Object"`, `"HTML"` |
+- `${dataType}` – Type of data detected: "Array", "Object", "HTML", or "Other"
+- `${dataCount}` – Count of elements/properties/tags
+- `${uniqueDataCount}` – Count of unique items (arrays only)
+- `${maxDepth}` – Maximum nesting depth
+- `${dataCountWithBrackets}` – Count with brackets: `[12]`, `{8}`, `<5>`
+- `${uniqueDataCountWithBrackets}` – Unique count with brackets
+- `${dataCountDesc}` – Human-readable description
+- `${openBracket}` / `${closeBracket}` – Bracket characters
 
-### Icon Support
+#### Regex Metrics
+- `${matchCount}` – Number of regex pattern matches
 
-You can enhance your display format with VS Code icons. Visit the [VS Code Codicon Library](https://microsoft.github.io/vscode-codicons/dist/codicon.html) to explore available icons.
+### Icons
 
-#### Icon Examples
+Enhance your display using [VS Code Codicons](https://microsoft.github.io/vscode-codicons/). Examples:
+
 ```json
 {
   "data-size-count.statusBar.fileSizeFormat": "$(file-text) ${fileSize}",
@@ -152,7 +140,40 @@ You can enhance your display format with VS Code icons. Visit the [VS Code Codic
 }
 ```
 
-### Example Configurations
+### Custom Regex Counting
+
+Add custom regex patterns to count specific elements (imports, exports, comments, etc.):
+
+```json
+{
+  "data-size-count.statusBar.regexCount": [
+    {
+      "title": "Imports",
+      "format": "$(cloud-download) ${matchCount} Imports",
+      "regex": "^\\s*import\\b.*$"
+    },
+    {
+      "title": "Exports",
+      "format": "$(cloud-upload) ${matchCount} Exports",
+      "regex": "^\\s*export\\b.*$"
+    },
+    {
+      "title": "Comments",
+      "format": "$(comment) ${matchCount} Comments",
+      "regex": "^\\s*(//.*|#.*|<!--.*-->)$"
+    }
+  ]
+}
+```
+
+**Regex Entry Properties:**
+- `title` – Human-readable name for this pattern
+- `format` – Display format (use `${matchCount}` for the match count)
+- `regex` – Regular expression pattern (supports JS RegExp syntax)
+- `onlyOnSelection` – Evaluate only when text is selected (default: false)
+- `alwaysShow` – Show entry even if match count is zero (default: false)
+
+### Quick Configuration Examples
 
 #### Minimal Display
 ```json
@@ -163,78 +184,62 @@ You can enhance your display format with VS Code icons. Visit the [VS Code Codic
 }
 ```
 
-#### Detailed Display
+#### Developer-Focused
+```json
+{
+  "data-size-count.statusBar.fileSizeFormat": "$(file-text) ${fileSize}",
+  "data-size-count.statusBar.selectionCountFormat": "$(pencil) ${linesCount}L | $(list) ${wordsCount}W | ${charCount}C",
+  "data-size-count.statusBar.dataCountFormat": "$(database) ${dataCountWithBrackets} / Depth: ${maxDepth}",
+  "data-size-count.statusBar.regexCount": [
+    {
+      "title": "Imports",
+      "format": "$(cloud-download) ${matchCount} Imports",
+      "regex": "^\\s*import\\b.*$"
+    }
+  ]
+}
+```
+
+#### Detailed Display with All Metrics
 ```json
 {
   "data-size-count.statusBar.fileSizeFormat": "$(file-text) Size: ${fileSize}",
   "data-size-count.statusBar.selectedSizeFormat": "Selected: ${selectedSize}",
-  "data-size-count.statusBar.selectionCountFormat": "$(pencil) ${linesCount}L | $(symbol-string) ${wordsCount}W | $(symbol-character) ${charCount}C",
-  "data-size-count.statusBar.dataCountFormat": "$(symbol-array) ${dataCountWithBrackets}"
+  "data-size-count.statusBar.selectionCountFormat": "$(pencil) ${linesCount}L | $(list) ${wordsCount}W | $(symbol-character) ${charCount}C",
+  "data-size-count.statusBar.dataCountFormat": "$(symbol-array) ${dataCountWithBrackets} | Depth: ${maxDepth}",
+  "data-size-count.statusBar.regexCount": [
+    {
+      "title": "TODOs",
+      "format": "$(checklist) TODOs: ${matchCount}",
+      "regex": "TODO"
+    }
+  ]
 }
 ```
 
-#### Developer-Focused Display
-```json
-{
-  "data-size-count.statusBar.fileSizeFormat": "$(file-text) ${fileSize}",
-  "data-size-count.statusBar.selectionCountFormat": "$(pencil) ${linesCount} lines | $(list) ${wordsCount} words",
-  "data-size-count.statusBar.dataCountFormat": "Data: ${dataCountWithBrackets}"
-}
-```
+## Troubleshooting
 
-## 🐛 Troubleshooting
+### Status bar item not appearing
 
-### Status Bar Item Not Appearing
+- **File too large**: Extension doesn't process files larger than 20 MB
+- **Extension disabled**: Check Extensions → "Data Size Count" is enabled
+- **Status bar hidden**: Use View → Toggle Status Bar
 
-**Problem**: The status bar item is not visible in VS Code.
 
-**Solutions**:
-1. **File Size Limit**: The extension doesn't display metrics for files larger than **20 MB**. Check your file size.
-2. **Visibility Setting**: Verify that `data-size-count.statusBar.visibility` is enabled for the metrics you want to see:
-   ```json
-   {
-     "data-size-count.statusBar.visibility": {
-       "fileSize": true,
-       "selectedSize": true,
-       "linesCount": true,
-       "wordsCount": true,
-       "dataCount": true
-     }
-   }
-   ```
-3. **Extension Disabled**: Ensure the extension is enabled:
-   - Open Extensions (Ctrl+Shift+X)
-   - Search for "Data Size Count"
-   - If disabled, click the disable/enable toggle
-4. **Status Bar Hidden**: The status bar might be hidden. Show it via:
-   - View → Toggle Status Bar (or press Ctrl+J in some configurations)
+### Metrics not updating
 
-### Metrics Not Updating
+- **Reload window**: Ctrl+Shift+P → "Developer: Reload Window"
+- **Active editor required**: Ensure a text editor is open
+- **Binary files**: Only text files are supported
 
-**Problem**: Status bar metrics are not updating when you make changes.
+### JSON/Array detection issues
 
-**Solutions**:
-1. **Reload Extension**: Press `Ctrl+Shift+P` → Search for "Developer: Reload Window" → Press Enter
-2. **Check File Support**: The extension currently supports all text-based files. Binary files are not supported.
-3. **Active Editor Required**: Ensure you have an active text editor open.
+- **Valid JSON required**: Remove trailing commas, comments, and unquoted keys
+- **Complete selection**: Select entire JSON structure
+- **Examples**:
+  - ✅ Valid: `[1, 2, 3]`, `{"name": "John"}`
+  - ❌ Invalid: `[1, 2,]`, `{name: firstName}`
 
-### Incorrect Array/Object Detection
-
-**Problem**: JSON arrays or objects are not being detected correctly.
-
-**Solutions**:
-1. **Valid JSON**: Ensure your selected text is valid JSON:
-   ```json
-   // ✅ Valid
-   [1, 2, 3, 4]
-   {"name": "John", "age": 30}
-   
-   // ❌ Invalid
-   [1, 2, 3,]  // Trailing comma
-   {name: firstName}  // using variables
-   ```
-2. **Selection**: Make sure you've selected the entire JSON structure.
-3. **Comments**: JSON does not support comments. Remove any comments from your selection.
 
 ### Performance Issues with Large Files
 

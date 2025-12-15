@@ -1,3 +1,18 @@
+## v4.0.0
+
+**Breaking Changes:**
+- Removed `visibility` setting - format settings now control display (set to empty string to hide)
+- Command renamed: `showFileDetails` → `showCombinedDetails`
+
+**Added:**
+- Custom regex pattern counting with configurable display formats
+- Empty line count and duplicate line/word detection in selections
+- Max depth calculation for nested JSON/Object structures
+- Unique data count for arrays
+- Individual status bar items for file size, selection metrics, and regex counts
+- Combined details view with formatted statistics popup
+- Support for new format variables: `${emptyLineCount}`, `${duplicateLinesCount}`, `${duplicateWordsCount}`, `${maxDepth}`, `${uniqueDataCount}`, `${matchCount}`
+
 ## v3.0.0
 
 - added - selected size metrics in statusbar

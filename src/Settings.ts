@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { RegexCountItem } from "./types";
 
 export class Settings {
   static get configuration() {
@@ -11,7 +12,7 @@ export class Settings {
     return Settings.configuration.update(key, val, isGlobal);
   }
   static get position() {
-    return Settings.getSettings("position") as "Right" | "Left";
+    return (Settings.getSettings("position") as "Right" | "Left") || "Left";
   }
   static get priority() {
     return (Settings.getSettings("priority") as number) || -1;
@@ -28,10 +29,13 @@ export class Settings {
   static get dataCountFormat() {
     return Settings.getSettings("dataCountFormat") as string;
   }
-  static get visibility() {
-    return Settings.getSettings("visibility") as { fileSize: boolean; selectedSize: boolean; selection: boolean; data: boolean };
+  static get regexCount() {
+    return Settings.getSettings("regexCount") as RegexCountItem[];
   }
-  static set visibility(object: { fileSize: boolean; selectedSize: boolean; selection: boolean; data: boolean }) {
-    Settings.setSettings("visibility", object);
+  static get selectionMetricsSeparator() {
+    return (Settings.getSettings("selectionMetricsSeparator") as string) || "";
+  }
+  static get regexCountSeparator() {
+    return (Settings.getSettings("regexCountSeparator") as string) || "";
   }
 }
